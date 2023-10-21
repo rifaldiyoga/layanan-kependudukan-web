@@ -27,7 +27,11 @@ function Sidebar(props) {
     // SIDEBAR
     return (
         <Box ref={mainPanel}>
-            <Box display={{ sm: "none", xl: "block" }} position="fixed">
+            <Box
+                display={{ sm: "none", xl: "block" }}
+                position="fixed"
+                overflowX={{ sm: "scroll", xl: "hidden" }}
+            >
                 <Box
                     bg={sidebarBg}
                     transition={variantChange}
@@ -49,7 +53,7 @@ function Sidebar(props) {
                         routes={routes}
                         logoText={"LAYANAN KEPENDUDUKAN"}
                         display="none"
-                        sidebarVariant={sidebarVariant}
+                        sidebarVariant="opaque"
                     />
                 </Box>
             </Box>

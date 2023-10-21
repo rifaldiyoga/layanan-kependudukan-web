@@ -26,7 +26,7 @@ const SidebarContent = ({ logoText, routes }) => {
 
     // verifies if routeName is the one active (in browser input)
     const activeRoute = (routeName) => {
-        return location.pathname === routeName ? "active" : "";
+        return location.pathname.includes(routeName) ? "active" : "";
     };
     const createLinks = (routes) => {
         // Chakra Color Mode
@@ -187,8 +187,7 @@ const SidebarContent = ({ logoText, routes }) => {
         <>
             <Box pt={"25px"} mb="12px">
                 <Link
-                    href={`${process.env.PUBLIC_URL}/#/`}
-                    target="_blank"
+                    href={`${process.env.PUBLIC_URL}/`}
                     display="flex"
                     lineHeight="100%"
                     mb="30px"
@@ -204,7 +203,7 @@ const SidebarContent = ({ logoText, routes }) => {
                 </Link>
                 <Separator></Separator>
             </Box>
-            <Stack direction="column" mb="40px">
+            <Stack direction="column" mb="40px" overflowY={"scroll  "}>
                 <Box>{links}</Box>
             </Stack>
         </>

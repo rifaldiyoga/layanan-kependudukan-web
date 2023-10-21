@@ -7,7 +7,7 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar";
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import routes from "routes.js";
+import routes from "admin-routes.js";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
@@ -18,15 +18,21 @@ import FixedPlugin from "../components/FixedPlugin/FixedPlugin";
 import MainPanel from "../components/Layout/MainPanel";
 import PanelContainer from "../components/Layout/PanelContainer";
 import PanelContent from "../components/Layout/PanelContent";
+import { useStateContext } from "context/ContextProvider";
+import { Navigate } from "react-big-calendar";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 export default function Dashboard(props) {
+    const history = useHistory();
     const { ...rest } = props;
     // states and functions
     const [sidebarVariant, setSidebarVariant] = useState("transparent");
     const [fixed, setFixed] = useState(false);
-    // functions for changing the states from components
-    const getRoute = () => {
-        return window.location.pathname !== "/admin/full-screen-maps";
-    };
+    const { token } = useStateContext();
+
+    if (!token) {
+        history.push({ pathname: "/auth/signin" });
+    }
+
     const getActiveRoute = (routes) => {
         let activeRoute = "Default Brand Text";
         for (let i = 0; i < routes.length; i++) {
@@ -52,6 +58,7 @@ export default function Dashboard(props) {
         }
         return activeRoute;
     };
+
     // This changes navbar state(fixed or not)
     const getActiveNavbar = (routes) => {
         let activeNavbar = false;
@@ -75,27 +82,43 @@ export default function Dashboard(props) {
         }
         return activeNavbar;
     };
+
     const getRoutes = (routes) => {
-        return routes.map((prop, key) => {
+        const results = [];
+        routes.forEach((prop, index) => {
             if (prop.collapse) {
                 return getRoutes(prop.views);
             }
-            if (prop.category === "account") {
-                return getRoutes(prop.views);
+            if (prop.category) {
+                results.push(getRoutes(prop.views));
             }
             if (prop.layout === "/admin") {
-                return (
+                if (prop.views != null) {
+                    prop.views.forEach((propView, indexView) => {
+                        results.push(
+                            <Route
+                                path={prop.layout + prop.path + propView.path}
+                                component={propView.component}
+                                key={`${index}` + `${indexView}`}
+                            />
+                        );
+                    });
+                }
+
+                results.push(
                     <Route
                         path={prop.layout + prop.path}
                         component={prop.component}
-                        key={key}
+                        key={index}
                     />
                 );
             } else {
                 return null;
             }
         });
+        return results;
     };
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     document.documentElement.dir = "ltr";
     // Chakra Color Mode
@@ -124,24 +147,22 @@ export default function Dashboard(props) {
                         {...rest}
                     />
                 </Portal>
-                {getRoute() ? (
-                    <PanelContent>
-                        <PanelContainer>
-                            <Switch>
-                                {getRoutes(routes)}
-                                <Redirect from="/admin" to="/admin/dashboard" />
-                            </Switch>
-                        </PanelContainer>
-                    </PanelContent>
-                ) : null}
+                <PanelContent>
+                    <PanelContainer>
+                        <Switch>
+                            {getRoutes(routes)}
+                            <Redirect from="/admin" to="/admin/dashboard" />
+                        </Switch>
+                    </PanelContainer>
+                </PanelContent>
                 <Footer />
-                <Portal>
+                {/* <Portal>
                     <FixedPlugin
                         secondary={getActiveNavbar(routes)}
                         fixed={fixed}
                         onOpen={onOpen}
                     />
-                </Portal>
+                </Portal> */}
                 <Configurator
                     secondary={getActiveNavbar(routes)}
                     isOpen={isOpen}

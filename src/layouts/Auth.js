@@ -5,68 +5,30 @@ import Footer from "components/Footer/Footer.js";
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import routes from "routes.js";
+import routes from "auth-routes.js";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import theme from "theme/theme.js";
+import { useStateContext } from "context/ContextProvider";
 
 export default function Pages(props) {
     const { ...rest } = props;
+    const { token } = useStateContext();
+
     // ref for the wrapper div
     const wrapper = React.createRef();
+
+    if (token) {
+        return <Redirect to="/admin/dashboard" />;
+    }
+
     React.useEffect(() => {
         document.body.style.overflow = "unset";
         // Specify how to clean up after this effect:
         return function cleanup() {};
     });
-    const getActiveRoute = (routes) => {
-        let activeRoute = "Default Brand Text";
-        for (let i = 0; i < routes.length; i++) {
-            if (routes[i].collapse) {
-                let collapseActiveRoute = getActiveRoute(routes[i].views);
-                if (collapseActiveRoute !== activeRoute) {
-                    return collapseActiveRoute;
-                }
-            } else if (routes[i].category) {
-                let categoryActiveRoute = getActiveRoute(routes[i].views);
-                if (categoryActiveRoute !== activeRoute) {
-                    return categoryActiveRoute;
-                }
-            } else {
-                if (
-                    window.location.href.indexOf(
-                        routes[i].layout + routes[i].path
-                    ) !== -1
-                ) {
-                    return routes[i].name;
-                }
-            }
-        }
-        return activeRoute;
-    };
-    const getActiveNavbar = (routes) => {
-        let activeNavbar = false;
-        for (let i = 0; i < routes.length; i++) {
-            if (routes[i].category) {
-                let categoryActiveNavbar = getActiveNavbar(routes[i].views);
-                if (categoryActiveNavbar !== activeNavbar) {
-                    return categoryActiveNavbar;
-                }
-            } else {
-                if (
-                    window.location.href.indexOf(
-                        routes[i].layout + routes[i].path
-                    ) !== -1
-                ) {
-                    if (routes[i].secondaryNavbar) {
-                        return routes[i].secondaryNavbar;
-                    }
-                }
-            }
-        }
-        return activeNavbar;
-    };
+
     const getRoutes = (routes) => {
         return routes.map((prop, key) => {
             if (prop.collapse) {
@@ -93,15 +55,9 @@ export default function Pages(props) {
     return (
         <ChakraProvider theme={theme} resetCss={false} w="100%">
             <Box ref={navRef} w="100%">
-                {/* <Portal containerRef={navRef}>
-					<AuthNavbar secondary={getActiveNavbar(routes)} logoText='PURITY UI DASHBOARD' />
-				</Portal> */}
                 <Box w="100%">
                     <Box ref={wrapper} w="100%">
-                        <Switch>
-                            {getRoutes(routes)}
-                            <Redirect from="/auth" to="/auth/login-page" />
-                        </Switch>
+                        <Switch>{getRoutes(routes)}</Switch>
                     </Box>
                 </Box>
                 <Box px="24px" mx="auto" width="1044px" maxW="100%">
