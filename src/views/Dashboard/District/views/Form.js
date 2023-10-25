@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Center,
     Flex,
     FormControl,
     FormErrorMessage,
@@ -251,29 +252,45 @@ function DistirctForm() {
                                                 {errors.province_id}
                                             </FormErrorMessage>
                                         </FormControl>
-
-                                        <Button
-                                            isLoading={isSubmitting}
-                                            type="submit"
-                                            bg="teal.300"
-                                            fontSize="10px"
-                                            color="white"
-                                            fontWeight="bold"
-                                            w="100%"
-                                            h="45"
-                                            mb="24px"
-                                            _hover={{
-                                                bg: "teal.200",
-                                            }}
-                                            _active={{
-                                                bg: "teal.400",
-                                            }}
-                                        >
-                                            SUBMIT
-                                        </Button>
                                     </Flex>
                                     <Flex flex="1" />
                                 </Flex>
+                                <Center>
+                                    <Button
+                                        fontSize="10px"
+                                        fontWeight="bold"
+                                        w="100px"
+                                        h="45"
+                                        mb="24px"
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
+                                        me="16px"
+                                        variant="outline"
+                                        colorScheme="teal"
+                                    >
+                                        BATAL
+                                    </Button>
+                                    <Button
+                                        isLoading={isSubmitting}
+                                        type="submit"
+                                        bg="teal.300"
+                                        fontSize="10px"
+                                        color="white"
+                                        fontWeight="bold"
+                                        w="100px"
+                                        h="45"
+                                        mb="24px"
+                                        _hover={{
+                                            bg: "teal.200",
+                                        }}
+                                        _active={{
+                                            bg: "teal.400",
+                                        }}
+                                    >
+                                        SUBMIT
+                                    </Button>
+                                </Center>
                             </Form>
                         );
                     }}

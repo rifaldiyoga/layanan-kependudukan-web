@@ -42,16 +42,12 @@ function Keluargas() {
 
     const columnsData1 = [
         {
-            Header: "Kode Keluarga",
-            accessor: "code",
+            Header: "No. Kartuu Keluarga",
+            accessor: "no_kk",
         },
         {
-            Header: "Nama Keluarga",
-            accessor: "name",
-        },
-        {
-            Header: "Type",
-            accessor: "type",
+            Header: "Kepala Keluarga",
+            accessor: "kepala_keluarga",
         },
 
         {

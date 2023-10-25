@@ -1,36 +1,23 @@
 import {
-    Box,
     Button,
+    Center,
     Flex,
     FormControl,
     FormErrorMessage,
     FormLabel,
-    Grid,
-    HStack,
-    Icon,
     Input,
-    Link,
     Select,
-    SimpleGrid,
-    Spacer,
-    Switch,
     Text,
-    useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import axiosClient from "axios-client";
 import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
+import { Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
 import {
-    NavLink,
-    Redirect,
     useHistory,
     useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
-import axiosClient from "axios-client";
-import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import BillingInformation from "views/Dashboard/Billing/components/BillingInformation";
-import Transactions from "views/Dashboard/Billing/components/Transactions";
 
 function KelurahanForm() {
     const history = useHistory();
@@ -251,29 +238,45 @@ function KelurahanForm() {
                                                 {errors.kecamatan_id}
                                             </FormErrorMessage>
                                         </FormControl>
-
-                                        <Button
-                                            isLoading={isSubmitting}
-                                            type="submit"
-                                            bg="teal.300"
-                                            fontSize="10px"
-                                            color="white"
-                                            fontWeight="bold"
-                                            w="100%"
-                                            h="45"
-                                            mb="24px"
-                                            _hover={{
-                                                bg: "teal.200",
-                                            }}
-                                            _active={{
-                                                bg: "teal.400",
-                                            }}
-                                        >
-                                            SUBMIT
-                                        </Button>
                                     </Flex>
                                     <Flex flex="1" />
                                 </Flex>
+                                <Center>
+                                    <Button
+                                        fontSize="10px"
+                                        fontWeight="bold"
+                                        w="100px"
+                                        h="45"
+                                        mb="24px"
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
+                                        me="16px"
+                                        variant="outline"
+                                        colorScheme="teal"
+                                    >
+                                        BATAL
+                                    </Button>
+                                    <Button
+                                        isLoading={isSubmitting}
+                                        type="submit"
+                                        bg="teal.300"
+                                        fontSize="10px"
+                                        color="white"
+                                        fontWeight="bold"
+                                        w="100px"
+                                        h="45"
+                                        mb="24px"
+                                        _hover={{
+                                            bg: "teal.200",
+                                        }}
+                                        _active={{
+                                            bg: "teal.400",
+                                        }}
+                                    >
+                                        SUBMIT
+                                    </Button>
+                                </Center>
                             </Form>
                         );
                     }}

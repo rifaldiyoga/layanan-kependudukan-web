@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Center,
     Flex,
     FormControl,
     FormErrorMessage,
@@ -118,6 +119,20 @@ function LayananForm() {
         );
     };
 
+    const Switchs = ({ field, form, ...props }) => {
+        return (
+            <Switch
+                id="is_confirm"
+                name="is_confirm"
+                value={field.value}
+                isChecked={field.value}
+                onChange={(event) => {
+                    form.setFieldValue("is_confirm", event.target.checked);
+                }}
+            />
+        );
+    };
+
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
             <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
@@ -147,7 +162,12 @@ function LayananForm() {
                                     const layanans = data.data;
 
                                     setLoading(false);
-                                    const fields = ["code", "name", "type"];
+                                    const fields = [
+                                        "code",
+                                        "name",
+                                        "type",
+                                        "is_confirm",
+                                    ];
                                     fields.forEach((field) => {
                                         setFieldValue(
                                             field,
@@ -235,29 +255,65 @@ function LayananForm() {
                                                 {errors.type}
                                             </FormErrorMessage>
                                         </FormControl>
-
-                                        <Button
-                                            isLoading={isSubmitting}
-                                            type="submit"
-                                            bg="teal.300"
-                                            fontSize="10px"
-                                            color="white"
-                                            fontWeight="bold"
-                                            w="100%"
-                                            h="45"
-                                            mb="24px"
-                                            _hover={{
-                                                bg: "teal.200",
-                                            }}
-                                            _active={{
-                                                bg: "teal.400",
-                                            }}
+                                        <FormControl
+                                            isInvalid={errors.is_confirm}
+                                            mb="32px"
                                         >
-                                            SUBMIT
-                                        </Button>
+                                            <FormLabel
+                                                ms="4px"
+                                                fontSize="sm"
+                                                fontWeight="normal"
+                                            >
+                                                Konfirmasi RT & RW
+                                            </FormLabel>
+                                            <Field
+                                                name="is_confirm"
+                                                component={Switchs}
+                                            />
+
+                                            <FormErrorMessage>
+                                                {errors.is_confirm}
+                                            </FormErrorMessage>
+                                        </FormControl>
                                     </Flex>
                                     <Flex flex="1" />
                                 </Flex>
+                                <Center>
+                                    <Button
+                                        fontSize="10px"
+                                        fontWeight="bold"
+                                        w="100px"
+                                        h="45"
+                                        mb="24px"
+                                        onClick={() => {
+                                            history.goBack();
+                                        }}
+                                        me="16px"
+                                        variant="outline"
+                                        colorScheme="teal"
+                                    >
+                                        BATAL
+                                    </Button>
+                                    <Button
+                                        isLoading={isSubmitting}
+                                        type="submit"
+                                        bg="teal.300"
+                                        fontSize="10px"
+                                        color="white"
+                                        fontWeight="bold"
+                                        w="100px"
+                                        h="45"
+                                        mb="24px"
+                                        _hover={{
+                                            bg: "teal.200",
+                                        }}
+                                        _active={{
+                                            bg: "teal.400",
+                                        }}
+                                    >
+                                        SUBMIT
+                                    </Button>
+                                </Center>
                             </Form>
                         );
                     }}

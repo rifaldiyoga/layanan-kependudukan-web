@@ -16,7 +16,7 @@ function Pengajuans() {
     const getDatas = () => {
         setLoading(true);
         axiosClient
-            .get("/v1/pengajuans")
+            .get("/v1/pengajuans/admin")
             .then(({ data }) => {
                 setLoading(false);
                 setPengajuans(data.data.data);
@@ -42,8 +42,12 @@ function Pengajuans() {
 
     const columnsData1 = [
         {
+            Header: "NIK",
+            accessor: "nik",
+        },
+        {
             Header: "Layanan",
-            accessor: "layanan_id",
+            accessor: "layanan",
         },
         {
             Header: "Nama Pengajuan",

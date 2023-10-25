@@ -1,5 +1,11 @@
 // Chakra imports
-import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
+import {
+    ChakraProvider,
+    Portal,
+    StylesProvider,
+    useDisclosure,
+    useStyles,
+} from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
 import Footer from "components/Footer/Footer.js";
 // Layout components
@@ -157,12 +163,12 @@ export default function Dashboard(props) {
                 </PanelContent>
                 <Footer />
                 {/* <Portal>
-                    <FixedPlugin
-                        secondary={getActiveNavbar(routes)}
-                        fixed={fixed}
-                        onOpen={onOpen}
-                    />
-                </Portal> */}
+            <FixedPlugin
+                secondary={getActiveNavbar(routes)}
+                fixed={fixed}
+                onOpen={onOpen}
+            />
+        </Portal> */}
                 <Configurator
                     secondary={getActiveNavbar(routes)}
                     isOpen={isOpen}
