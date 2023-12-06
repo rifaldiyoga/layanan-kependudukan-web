@@ -1,41 +1,36 @@
 import {
-    Box,
     Button,
     Center,
     Flex,
-    FormControl,
-    FormErrorMessage,
-    FormLabel,
-    Grid,
-    HStack,
-    Icon,
     Input,
-    Link,
     Select,
-    SimpleGrid,
-    Spacer,
-    Switch,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Table,
+    Tabs,
+    Tbody,
+    Td,
     Text,
-    useColorModeValue,
+    Th,
+    Thead,
+    Tr,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import axiosClient from "axios-client";
+import StatusBadge from "components/Badge/StatusBadge";
 import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
+import { useEffect, useState } from "react";
 import {
-    NavLink,
-    Redirect,
     useHistory,
     useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
-import axiosClient from "axios-client";
-import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import BillingInformation from "views/Dashboard/Billing/components/BillingInformation";
-import Transactions from "views/Dashboard/Billing/components/Transactions";
 
 function PengajuanForm() {
     const history = useHistory();
     const [loading, setLoading] = useState(false);
+    const [pengajuans, setPengajuan] = useState(false);
 
     let { id } = useParams();
     const isEdit = id;
@@ -64,9 +59,10 @@ function PengajuanForm() {
             });
     }
 
-    function updatePengajuan(fields, setSubmitting) {
+    function updatePengajuan(fields, s) {
+        const field = { ...fields, status: s };
         axiosClient
-            .post("/v1/pengajuans/" + id, fields)
+            .post("/v1/pengajuans/" + id, field)
             .then((response) => {
                 if (response.status == 200) {
                     console.log(response);
@@ -78,6 +74,24 @@ function PengajuanForm() {
                 console.log(error);
             });
     }
+
+    const getDatas = (id) => {
+        axiosClient
+            .get("/v1/pengajuans/" + id)
+            .then(({ data }) => {
+                const pengajuans = data.data;
+                console.log(pengajuans);
+
+                setPengajuan(pengajuans);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        getDatas(id);
+    }, []);
 
     const initialValues = {
         type: "",
@@ -124,120 +138,100 @@ function PengajuanForm() {
             <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
                 <Flex p="16px">
                     <Text fontSize="xl" fontWeight="bold" flex="1">
-                        {!isEdit ? "Tambah Pengajuan" : "Edit Pengajuan"}
+                        Detail Pengajuan
                     </Text>
                 </Flex>
-                <Formik
-                    flex="1"
-                    initialValues={initialValues}
-                    onSubmit={onSubmit}
-                    validationSchema={validationSchema}
-                >
-                    {({
-                        errors,
-                        touched,
-                        isSubmitting,
-                        setFieldValue,
-                        handleChange,
-                        values,
-                    }) => {
-                        const getDatas = (id) => {
-                            axiosClient
-                                .get("/v1/pengajuans/" + id)
-                                .then(({ data }) => {
-                                    const pengajuans = data.data;
 
-                                    setLoading(false);
-                                    const fields = ["code", "name", "type"];
-                                    fields.forEach((field) => {
-                                        setFieldValue(
-                                            field,
-                                            pengajuans[field],
-                                            false
-                                        );
-                                    });
-                                    setPengajuan(pengajuans);
-                                })
-                                .catch(() => {
-                                    setLoading(false);
-                                });
-                        };
+                {pengajuans && (
+                    <Tabs flex="1">
+                        <TabList>
+                            <Tab>Pengajuan</Tab>
+                            <Tab>Timeline</Tab>
+                        </TabList>
+                        <TabPanels>
+                            <TabPanel>
+                                <Flex p="16px" direction="column">
+                                    <Text
+                                        fontSize="l"
+                                        fontWeight="bold"
+                                        flex="1"
+                                    >
+                                        Biodata Pengaju
+                                    </Text>
+                                    <Table mt="16px" p="0px">
+                                        <Tbody>
+                                            <Tr>
+                                                <Td w="15%">NIK</Td>
+                                                <Td w="2%"> : </Td>
+                                                <Td>
+                                                    {pengajuans.penduduk.nik}
+                                                </Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Nama Pengaju</Td>
+                                                <Td> : </Td>
+                                                <Td>
+                                                    {
+                                                        pengajuans.penduduk
+                                                            .fullname
+                                                    }
+                                                </Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Alamat</Td>
+                                                <Td> : </Td>
+                                                <Td>
+                                                    {
+                                                        pengajuans.penduduk
+                                                            .address
+                                                    }
+                                                </Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>RT / RW</Td>
+                                                <Td> : </Td>
+                                                <Td>
+                                                    {pengajuans.penduduk.rt_id}{" "}
+                                                    /{" "}
+                                                    {pengajuans.penduduk.rw_id}
+                                                </Td>
+                                            </Tr>
+                                        </Tbody>
+                                    </Table>
 
-                        useEffect(() => {
-                            if (isEdit) {
-                                getDatas(id);
-                            }
-                        }, []);
-
-                        return (
-                            <Form flex="1">
-                                <Flex direction="row" p="16px">
-                                    <Flex direction="column" flex="1">
-                                        <FormControl
-                                            isInvalid={errors.code}
-                                            mb="16px"
-                                        >
-                                            <FormLabel
-                                                ms="4px"
-                                                fontSize="sm"
-                                                fontWeight="normal"
-                                            >
-                                                Kode Pengajuan
-                                            </FormLabel>
-                                            <Field
-                                                placeholder="Kode Pengajuan"
-                                                name="code"
-                                                component={Inputs}
-                                            />
-
-                                            <FormErrorMessage>
-                                                {errors.code}
-                                            </FormErrorMessage>
-                                        </FormControl>
-
-                                        <FormControl
-                                            isInvalid={errors.name}
-                                            mb="16px"
-                                        >
-                                            <FormLabel
-                                                ms="4px"
-                                                fontSize="sm"
-                                                fontWeight="normal"
-                                            >
-                                                Nama Pengajuan
-                                            </FormLabel>
-                                            <Field
-                                                placeholder="Nama Pengajuan"
-                                                name="name"
-                                                component={Inputs}
-                                            />
-
-                                            <FormErrorMessage>
-                                                {errors.name}
-                                            </FormErrorMessage>
-                                        </FormControl>
-                                        <FormControl
-                                            isInvalid={errors.type}
-                                            mb="32px"
-                                        >
-                                            <FormLabel
-                                                ms="4px"
-                                                fontSize="sm"
-                                                fontWeight="normal"
-                                            >
-                                                Tipe Pengajuan
-                                            </FormLabel>
-                                            <Field
-                                                name="type"
-                                                component={Selects}
-                                            />
-
-                                            <FormErrorMessage>
-                                                {errors.type}
-                                            </FormErrorMessage>
-                                        </FormControl>
-                                    </Flex>
-                                    <Flex flex="1" />
+                                    <Text
+                                        fontSize="l"
+                                        fontWeight="bold"
+                                        flex="1"
+                                        mt="16px"
+                                    >
+                                        Pengajuan
+                                    </Text>
+                                    <Table p="0px" mt="16px">
+                                        <Tbody>
+                                            <Tr>
+                                                <Td w="15%">Jenis Pengajuan</Td>
+                                                <Td w="2%"> : </Td>
+                                                <Td>{pengajuans.layanan}</Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Keterangan</Td>
+                                                <Td> : </Td>
+                                                <Td>{pengajuans.keterangan}</Td>
+                                            </Tr>
+                                            <Tr>
+                                                <Td>Status</Td>
+                                                <Td> : </Td>
+                                                <Td>
+                                                    <StatusBadge
+                                                        status={
+                                                            pengajuans.status
+                                                        }
+                                                    />
+                                                </Td>
+                                            </Tr>
+                                        </Tbody>
+                                    </Table>
                                 </Flex>
                                 <Center>
                                     <Button
@@ -247,16 +241,18 @@ function PengajuanForm() {
                                         h="45"
                                         mb="24px"
                                         onClick={() => {
-                                            history.goBack();
+                                            updatePengajuan(
+                                                pengajuans,
+                                                "REJECTED"
+                                            );
                                         }}
                                         me="16px"
                                         variant="outline"
                                         colorScheme="teal"
                                     >
-                                        BATAL
+                                        TOLAK
                                     </Button>
                                     <Button
-                                        isLoading={isSubmitting}
                                         type="submit"
                                         bg="teal.300"
                                         fontSize="10px"
@@ -264,6 +260,12 @@ function PengajuanForm() {
                                         fontWeight="bold"
                                         w="100px"
                                         h="45"
+                                        onClick={() => {
+                                            updatePengajuan(
+                                                pengajuans,
+                                                "VALID"
+                                            );
+                                        }}
                                         mb="24px"
                                         _hover={{
                                             bg: "teal.200",
@@ -272,13 +274,32 @@ function PengajuanForm() {
                                             bg: "teal.400",
                                         }}
                                     >
-                                        SUBMIT
+                                        SETUJUI
                                     </Button>
                                 </Center>
-                            </Form>
-                        );
-                    }}
-                </Formik>
+                            </TabPanel>
+
+                            <TabPanel>
+                                <Table variant="striped">
+                                    <Thead>
+                                        <Tr>
+                                            <Th>Tanggal</Th>
+                                            <Th>Status</Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        {pengajuans.detail.map((data) => (
+                                            <Tr>
+                                                <Td>{data.created_at}</Td>
+                                                <Td>{data.status}</Td>
+                                            </Tr>
+                                        ))}
+                                    </Tbody>
+                                </Table>
+                            </TabPanel>
+                        </TabPanels>
+                    </Tabs>
+                )}
             </Card>
         </Flex>
     );

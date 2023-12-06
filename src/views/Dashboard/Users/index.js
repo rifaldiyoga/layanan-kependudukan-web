@@ -26,6 +26,20 @@ function Users() {
             });
     };
 
+    const deleteUsers = (id) => {
+        axiosClient
+            .delete("/v1/users/" + id)
+            .then((response) => {
+                if (response.status == 200) {
+                    console.log(response);
+                    getDatas();
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     const columnsData1 = [
         {
             Header: "NAME",
@@ -57,6 +71,7 @@ function Users() {
                 data={users}
                 loading={loading}
                 path="/users"
+                onDelete={deleteUsers}
             />
         </Flex>
     );

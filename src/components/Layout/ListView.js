@@ -1,6 +1,7 @@
 // Chakra imports
 import {
     Button,
+    Center,
     Flex,
     Spacer,
     Text,
@@ -18,7 +19,15 @@ import {
     Redirect,
 } from "react-router-dom/cjs/react-router-dom.min";
 
-const ListView = ({ title, captions, data, loading, path, onDelete }) => {
+const ListView = ({
+    title,
+    captions,
+    data,
+    loading,
+    path,
+    onDelete,
+    actionType,
+}) => {
     const [list, setData] = useState({ data });
 
     useEffect(() => {
@@ -55,13 +64,19 @@ const ListView = ({ title, captions, data, loading, path, onDelete }) => {
                 </Link>
             </Flex>
             <CardBody>
-                {list && list.length > 0 && (
+                {list && list.length > 0 ? (
                     <SearchTable1
                         tableData={list}
                         columnsData={captions}
                         path={path}
                         onDelete={onDelete}
+                        actionType={actionType}
                     />
+                ) : (
+                    <Flex>
+                        <Spacer />
+                        <Text m="16px">Tidak ada data</Text>
+                    </Flex>
                 )}
             </CardBody>
         </Card>

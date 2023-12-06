@@ -553,6 +553,10 @@ function KeluargaForm() {
                                                         <Tr>
                                                             <Th>NIK</Th>
                                                             <Th>Nama</Th>
+                                                            <Th>
+                                                                Status Dalam
+                                                                Keluarga
+                                                            </Th>
                                                         </Tr>
                                                     </Thead>
                                                     <Tbody>
@@ -567,6 +571,11 @@ function KeluargaForm() {
                                                                     <Td>
                                                                         {
                                                                             data.fullname
+                                                                        }
+                                                                    </Td>
+                                                                    <Td>
+                                                                        {
+                                                                            data.status_family
                                                                         }
                                                                     </Td>
                                                                 </Tr>

@@ -19,6 +19,7 @@ import {
 import axiosClient from "axios-client";
 import Card from "components/Card/Card.js";
 import SearchSelect from "components/Select/SearchSelect";
+import { statusNikah } from "constants";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import {
@@ -39,6 +40,7 @@ function PendudukForm() {
     const [kecamatans, setKecamatan] = useState([]);
     const [rts, setRt] = useState([]);
     const [rws, setRw] = useState([]);
+    const [statuses, setStatus] = useState([]);
 
     let { id } = useParams();
     const isEdit = id;
@@ -49,6 +51,16 @@ function PendudukForm() {
             .then(({ data }) => {
                 const penduduks = data.data.data;
                 setReligions(penduduks);
+            })
+            .catch(() => {});
+    };
+
+    const getStatus = () => {
+        axiosClient
+            .get("/v1/status")
+            .then(({ data }) => {
+                const penduduks = data.data.data;
+                setStatus(penduduks);
             })
             .catch(() => {});
     };
@@ -148,6 +160,7 @@ function PendudukForm() {
         getJob();
         getRt();
         getRw();
+        getStatus();
         getKelurahan();
         getKeluarga();
     }, []);
@@ -220,6 +233,7 @@ function PendudukForm() {
         rw_id: "",
         kelurahan_id: "",
         subdistrict_id: "",
+        status_family: "",
     };
 
     const isNotTomorrow = (value) => {
@@ -311,6 +325,7 @@ function PendudukForm() {
                                         "job_id",
                                         "jk",
                                         "maried_type",
+                                        "maried_date",
                                         "nationality",
                                         "no_kk",
                                         "rt_id",
@@ -319,6 +334,7 @@ function PendudukForm() {
                                         "kelurahan_id",
                                         "subdistrict_id",
                                         "address",
+                                        "status_family",
                                     ];
                                     fields.forEach((field) => {
                                         setFieldValue(
@@ -709,32 +725,9 @@ function PendudukForm() {
                                                             <Field
                                                                 name="maried_type"
                                                                 placeholder="Status Perkawinan"
-                                                                options={[
-                                                                    {
-                                                                        value:
-                                                                            "BK",
-                                                                        label:
-                                                                            "Belum Kawin",
-                                                                    },
-                                                                    {
-                                                                        value:
-                                                                            "K",
-                                                                        label:
-                                                                            "Kawin",
-                                                                    },
-                                                                    {
-                                                                        value:
-                                                                            "CH",
-                                                                        label:
-                                                                            "Cerai Hidup",
-                                                                    },
-                                                                    {
-                                                                        value:
-                                                                            "CM",
-                                                                        label:
-                                                                            "Cerai Mati",
-                                                                    },
-                                                                ]}
+                                                                options={
+                                                                    statusNikah
+                                                                }
                                                                 component={
                                                                     SearchSelect
                                                                 }
@@ -743,6 +736,94 @@ function PendudukForm() {
                                                             <FormErrorMessage>
                                                                 {
                                                                     errors.maried_type
+                                                                }
+                                                            </FormErrorMessage>
+                                                        </FormControl>
+                                                        {values.maried_type ==
+                                                        "K" ? (
+                                                            <FormControl
+                                                                isInvalid={
+                                                                    errors.maried_date
+                                                                }
+                                                                mb="16px"
+                                                            >
+                                                                <FormLabel
+                                                                    ms="4px"
+                                                                    fontSize="sm"
+                                                                    fontWeight="normal"
+                                                                >
+                                                                    Tanggal
+                                                                    Perkawinan
+                                                                </FormLabel>
+                                                                <Field
+                                                                    type="date"
+                                                                    name="maried_date"
+                                                                    data-date-format="dd-MM-yyyy"
+                                                                    component={
+                                                                        Inputs
+                                                                    }
+                                                                    onChange={(
+                                                                        e
+                                                                    ) => {
+                                                                        console.log(
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        );
+                                                                        setFieldValue(
+                                                                            "maried_date",
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        );
+                                                                    }}
+                                                                />
+
+                                                                <FormErrorMessage>
+                                                                    {
+                                                                        errors.maried_date
+                                                                    }
+                                                                </FormErrorMessage>
+                                                            </FormControl>
+                                                        ) : (
+                                                            <Flex />
+                                                        )}
+
+                                                        <FormControl
+                                                            isInvalid={
+                                                                errors.status_family
+                                                            }
+                                                            mb="16px"
+                                                        >
+                                                            <FormLabel
+                                                                ms="4px"
+                                                                fontSize="sm"
+                                                                fontWeight="normal"
+                                                            >
+                                                                Status Dalam
+                                                                Keluraga
+                                                            </FormLabel>
+                                                            <Field
+                                                                name="status_family"
+                                                                placeholder="Status Dalam Keluraga"
+                                                                options={statuses.map(
+                                                                    (data) => {
+                                                                        return {
+                                                                            value:
+                                                                                data.name,
+                                                                            label:
+                                                                                data.name,
+                                                                        };
+                                                                    }
+                                                                )}
+                                                                component={
+                                                                    SearchSelect
+                                                                }
+                                                            />
+
+                                                            <FormErrorMessage>
+                                                                {
+                                                                    errors.status_family
                                                                 }
                                                             </FormErrorMessage>
                                                         </FormControl>

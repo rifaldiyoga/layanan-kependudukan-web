@@ -27,6 +27,7 @@ import PanelContent from "../components/Layout/PanelContent";
 import { useStateContext } from "context/ContextProvider";
 import { Navigate } from "react-big-calendar";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import Notification from "Notification";
 export default function Dashboard(props) {
     const history = useHistory();
     const { ...rest } = props;
@@ -155,6 +156,7 @@ export default function Dashboard(props) {
                 </Portal>
                 <PanelContent>
                     <PanelContainer>
+                        <Notification />
                         <Switch>
                             {getRoutes(routes)}
                             <Redirect from="/admin" to="/admin/dashboard" />

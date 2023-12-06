@@ -1,9 +1,15 @@
 /*eslint-disable*/
 // chakra imports
 import {
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
     Box,
     Button,
     Flex,
+    Image,
     Link,
     Stack,
     Text,
@@ -15,6 +21,7 @@ import { Separator } from "components/Separator/Separator";
 import { SidebarHelp } from "components/Sidebar/SidebarHelp";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import signInImage from "assets/img/logo_kota_batu.png";
 
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
@@ -44,24 +51,71 @@ const SidebarContent = ({ logoText, routes }) => {
                 st[prop["state"]] = !state[prop.state];
                 return (
                     <div key={prop.name}>
-                        <Text
-                            color={activeColor}
-                            fontWeight="bold"
+                        <Accordion
+                            allowToggle
                             mb={{
                                 xl: "12px",
                             }}
-                            mx="auto"
-                            ps={{
-                                sm: "10px",
-                                xl: "16px",
-                            }}
-                            py="12px"
                         >
-                            {document.documentElement.dir === "rtl"
-                                ? prop.rtlName
-                                : prop.name}
-                        </Text>
-                        {createLinks(prop.views)}
+                            <AccordionItem borderColor="transparent">
+                                <AccordionButton p={0} bgColor="transparent">
+                                    <Button
+                                        boxSize="initial"
+                                        justifyContent="flex-start"
+                                        alignItems="center"
+                                        mx={{
+                                            xl: "auto",
+                                        }}
+                                        ps={{
+                                            sm: "10px",
+                                            xl: "16px",
+                                        }}
+                                        py="12px"
+                                        bgColor="transparent"
+                                        borderRadius="15px"
+                                        _hover="none"
+                                        w="100%"
+                                        _focus={{
+                                            boxShadow: "none",
+                                        }}
+                                    >
+                                        <Flex flex="1">
+                                            {typeof prop.icon === "string" ? (
+                                                <Icon>{prop.icon}</Icon>
+                                            ) : (
+                                                <IconBox
+                                                    bg={inactiveBg}
+                                                    color="teal.300"
+                                                    h="30px"
+                                                    w="30px"
+                                                    me="12px"
+                                                >
+                                                    {prop.icon}
+                                                </IconBox>
+                                            )}
+                                            <Text
+                                                color={inactiveColor}
+                                                my="auto"
+                                                fontSize="sm"
+                                            >
+                                                {document.documentElement
+                                                    .dir === "rtl"
+                                                    ? prop.rtlName
+                                                    : prop.name}
+                                            </Text>
+                                        </Flex>
+                                        <Flex>
+                                            <AccordionIcon />
+                                        </Flex>
+                                    </Button>
+                                </AccordionButton>
+                                <AccordionPanel ps={2} pe={0} pb={0}>
+                                    <Flex direction="column">
+                                        {createLinks(prop.views)}
+                                    </Flex>
+                                </AccordionPanel>
+                            </AccordionItem>
+                        </Accordion>
                     </div>
                 );
             }
@@ -70,7 +124,7 @@ const SidebarContent = ({ logoText, routes }) => {
                     {activeRoute(prop.layout + prop.path) === "active" ? (
                         <Button
                             boxSize="initial"
-                            justifyContent="flex-start"
+                            justifyContent="flex{`${process.env.PUBLIC_URL}/`}-start"
                             alignItems="center"
                             bg={activeBg}
                             mb={{
@@ -85,7 +139,6 @@ const SidebarContent = ({ logoText, routes }) => {
                             }}
                             py="12px"
                             borderRadius="15px"
-                            _hover="none"
                             w="100%"
                             _active={{
                                 bg: "inherit",
@@ -139,7 +192,6 @@ const SidebarContent = ({ logoText, routes }) => {
                                 xl: "16px",
                             }}
                             borderRadius="15px"
-                            _hover="none"
                             w="100%"
                             _active={{
                                 bg: "inherit",
@@ -196,9 +248,11 @@ const SidebarContent = ({ logoText, routes }) => {
                     alignItems="center"
                     fontSize="11px"
                 >
-                    <CreativeTimLogo w="32px" h="32px" me="10px" />
-                    <Text fontSize="sm" mt="3px">
-                        {logoText}
+                    <Image w="28px" me="16px" src={signInImage} />
+                    <Text fontSize="sm" mt="3px" lineHeight={1.5}>
+                        LAYANAN
+                        <br></br>
+                        KEPENDUDUKAN
                     </Text>
                 </Link>
                 <Separator></Separator>

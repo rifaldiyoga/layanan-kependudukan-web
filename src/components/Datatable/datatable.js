@@ -1,8 +1,16 @@
 import {
+    AbsoluteCenter,
     Button,
     Flex,
     Icon,
     Input,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     NumberDecrementStepper,
     NumberIncrementStepper,
     NumberInput,
@@ -17,8 +25,9 @@ import {
     Th,
     Thead,
     Tr,
+    useDisclosure,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
     TiArrowSortedDown,
@@ -32,11 +41,97 @@ import {
     useTable,
 } from "react-table";
 
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { FaEye, FaPencilAlt, FaTrashAlt, FaPrint } from "react-icons/fa";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
+const defaultActions = (actionType, path, row, setSelectedId, onOpen) => {
+    if (actionType == "print")
+        return (
+            <Flex justify="center" flex="1">
+                <Link to={"/admin" + path + "/" + row.original.id}>
+                    <Button p="0px" bg="transparent">
+                        <Flex cursor="pointer" align="center" p="6px">
+                            <Icon as={FaEye} />
+                        </Flex>
+                    </Button>
+                </Link>
+
+                <Link
+                    to={"/surat" + path + "/" + row.original.id}
+                    target="_blank"
+                >
+                    <Button p="0px" bg="transparent">
+                        <Flex cursor="pointer" align="center" p="6px">
+                            <Icon as={FaPrint} />
+                        </Flex>
+                    </Button>
+                </Link>
+            </Flex>
+        );
+    if (actionType == "view_only")
+        return (
+            <Flex justify="center" flex="1">
+                <Link to={"/admin" + path + "/" + row.original.id}>
+                    <Button p="0px" bg="transparent">
+                        <Flex cursor="pointer" align="center" p="6px">
+                            <Icon as={FaEye} />
+                        </Flex>
+                    </Button>
+                </Link>
+            </Flex>
+        );
+    if (actionType == "default")
+        return (
+            <Flex justify="center" flex="1">
+                <Link to={"/admin" + path + "/" + row.original.id}>
+                    <Button p="0px" bg="transparent">
+                        <Flex cursor="pointer" align="center" p="6px">
+                            <Icon as={FaEye} />
+                        </Flex>
+                    </Button>
+                </Link>
+                <Link to={"/admin" + path + "/" + row.original.id}>
+                    <Button p="0px" bg="transparent">
+                        <Flex cursor="pointer" align="center" p="6px">
+                            <Icon as={FaPencilAlt} />
+                        </Flex>
+                    </Button>
+                </Link>
+
+                <Button
+                    p="0px"
+                    bg="transparent"
+                    me={{ md: "12px" }}
+                    onClick={() => {
+                        setSelectedId(row.original.id);
+                        onOpen();
+                    }}
+                >
+                    <Flex
+                        color="red.500"
+                        cursor="pointer"
+                        align="center"
+                        p="6px"
+                    >
+                        <Icon as={FaTrashAlt} />
+                    </Flex>
+                </Button>
+            </Flex>
+        );
+};
+
 function SearchTable1(props) {
-    const { columnsData, tableData, path, onDelete } = props;
+    const {
+        columnsData,
+        tableData,
+        path,
+        onDelete,
+        actionType = "default",
+    } = props;
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const [selectedId, setSelectedId] = useState(0);
 
     const columns = useMemo(() => columnsData, []);
     const data = useMemo(() => tableData, [tableData]);
@@ -202,63 +297,14 @@ function SearchTable1(props) {
                                             >
                                                 {cell.column.id != "action" &&
                                                     cell.render("Cell")}
-                                                {cell.column.id == "action" && (
-                                                    <Flex
-                                                        justify="center"
-                                                        flex="1"
-                                                    >
-                                                        <Link
-                                                            to={
-                                                                "/admin" +
-                                                                path +
-                                                                "/" +
-                                                                row.original.id
-                                                            }
-                                                        >
-                                                            <Button
-                                                                p="0px"
-                                                                bg="transparent"
-                                                            >
-                                                                <Flex
-                                                                    cursor="pointer"
-                                                                    align="center"
-                                                                    p="6px"
-                                                                >
-                                                                    <Icon
-                                                                        as={
-                                                                            FaPencilAlt
-                                                                        }
-                                                                    />
-                                                                </Flex>
-                                                            </Button>
-                                                        </Link>
-
-                                                        <Button
-                                                            p="0px"
-                                                            bg="transparent"
-                                                            me={{ md: "12px" }}
-                                                            onClick={() =>
-                                                                handleDelete(
-                                                                    row.original
-                                                                        .id
-                                                                )
-                                                            }
-                                                        >
-                                                            <Flex
-                                                                color="red.500"
-                                                                cursor="pointer"
-                                                                align="center"
-                                                                p="6px"
-                                                            >
-                                                                <Icon
-                                                                    as={
-                                                                        FaTrashAlt
-                                                                    }
-                                                                />
-                                                            </Flex>
-                                                        </Button>
-                                                    </Flex>
-                                                )}
+                                                {cell.column.id == "action" &&
+                                                    defaultActions(
+                                                        actionType,
+                                                        path,
+                                                        row,
+                                                        setSelectedId,
+                                                        onOpen
+                                                    )}
                                             </Td>
                                         );
                                     })}
@@ -408,6 +454,32 @@ function SearchTable1(props) {
                     </Stack>
                 </Flex>
             </Flex>
+            <AbsoluteCenter>
+                <Modal isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>Hapus Data?</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            Apakah anda yakin akan menghapus data ini?
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button colorScheme="blue" mr={3} onClick={onClose}>
+                                Tidak
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                onClick={() => {
+                                    onClose();
+                                    handleDelete(selectedId);
+                                }}
+                            >
+                                Hapus
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
+            </AbsoluteCenter>
         </>
     );
 }

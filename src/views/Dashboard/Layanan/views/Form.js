@@ -65,6 +65,7 @@ function LayananForm() {
     }
 
     function updateLayanan(fields, setSubmitting) {
+        console.log(fields);
         axiosClient
             .post("/v1/layanans/" + id, fields)
             .then((response) => {
@@ -115,6 +116,7 @@ function LayananForm() {
                 <option value="LP">Layanan Pindah</option>
                 <option value="LN">Layanan Nikah</option>
                 <option value="LKK">Layanan Kelahiran & Kematian</option>
+                <option value="LT">Layanan Pertanahan</option>
             </Select>
         );
     };

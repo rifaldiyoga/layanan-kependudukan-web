@@ -1,5 +1,5 @@
 // Chakra imports
-import { Flex } from "@chakra-ui/react";
+import { Button, Flex, Icon } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import ListView from "../../../components/Layout/ListView";
 import axiosClient from "axios-client";
@@ -19,7 +19,18 @@ function Pengajuans() {
             .get("/v1/pengajuans/admin")
             .then(({ data }) => {
                 setLoading(false);
-                setPengajuans(data.data.data);
+                let datas = data.data.data.map((d) => {
+                    let stat = "Menunggu Persetujuan Kelurahan";
+                    if (d.status == "VALID") {
+                        stat = "Sudah Disetuji";
+                    }
+                    if (d.status == "REJECTED") {
+                        stat = "Sudah Ditolak";
+                    }
+                    return { ...d, status: stat };
+                });
+
+                setPengajuans(datas);
             })
             .catch(() => {
                 setLoading(false);
@@ -50,13 +61,18 @@ function Pengajuans() {
             accessor: "layanan",
         },
         {
-            Header: "Nama Pengajuan",
+            Header: "Nama Pengaju",
             accessor: "name",
         },
 
         {
             Header: "Keterangan",
             accessor: "keterangan",
+        },
+
+        {
+            Header: "Status",
+            accessor: "status",
         },
 
         {
@@ -69,6 +85,16 @@ function Pengajuans() {
         },
     ];
 
+    const actions = () => {
+        return (
+            <Button p="0px" bg="transparent">
+                <Flex cursor="pointer" align="center" p="6px">
+                    TES
+                </Flex>
+            </Button>
+        );
+    };
+
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
             <ListView
@@ -77,6 +103,7 @@ function Pengajuans() {
                 data={pengajuans}
                 loading={loading}
                 path="/pengajuans"
+                actionType="view_only"
                 onDelete={deletePengajuan}
             />
         </Flex>

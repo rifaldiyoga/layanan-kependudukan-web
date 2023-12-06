@@ -15,19 +15,21 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
 import ReactDOM from "react-dom";
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
 
-import AuthLayout from "layouts/Auth.js";
-import AdminLayout from "layouts/Admin.js";
 import { ContextProvider } from "context/ContextProvider";
+import AdminLayout from "layouts/Admin.js";
+import AuthLayout from "layouts/Auth.js";
+import SuratLayout from "layouts/Surat.js";
+
 ReactDOM.render(
     <ContextProvider>
         <HashRouter>
             <Switch>
                 <Route path={`/auth`} component={AuthLayout} />
                 <Route path={`/admin`} component={AdminLayout} />
+                <Route path={`/surat`} component={SuratLayout} />
                 <Redirect from={`/`} to="/admin/dashboard" />
             </Switch>
         </HashRouter>

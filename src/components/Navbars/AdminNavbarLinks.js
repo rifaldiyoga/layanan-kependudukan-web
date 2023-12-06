@@ -1,13 +1,9 @@
 // Chakra Icons
-import { BellIcon, SearchIcon } from "@chakra-ui/icons";
+import { BellIcon } from "@chakra-ui/icons";
 // Chakra Imports
 import {
     Button,
     Flex,
-    IconButton,
-    Input,
-    InputGroup,
-    InputLeftElement,
     Menu,
     MenuButton,
     MenuItem,
@@ -20,11 +16,9 @@ import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
 import avatar3 from "assets/img/avatars/avatar3.png";
 // Custom Icons
-import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
+import { ProfileIcon } from "components/Icons/Icons";
 // Custom Components
-import { Redirect, Route, Switch } from "react-router-dom";
 import { ItemContent } from "components/Menu/ItemContent";
-import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import { useStateContext } from "context/ContextProvider";
 import PropTypes from "prop-types";
 import React from "react";
@@ -60,55 +54,6 @@ export default function HeaderLinks(props) {
             alignItems="center"
             flexDirection="row"
         >
-            <InputGroup
-                cursor="pointer"
-                bg={inputBg}
-                borderRadius="15px"
-                w={{
-                    sm: "128px",
-                    md: "200px",
-                }}
-                me={{ sm: "auto", md: "20px" }}
-                _focus={{
-                    borderColor: { mainTeal },
-                }}
-                _active={{
-                    borderColor: { mainTeal },
-                }}
-            >
-                <InputLeftElement
-                    children={
-                        <IconButton
-                            bg="inherit"
-                            borderRadius="inherit"
-                            _hover="none"
-                            _active={{
-                                bg: "inherit",
-                                transform: "none",
-                                borderColor: "transparent",
-                            }}
-                            _focus={{
-                                boxShadow: "none",
-                            }}
-                            icon={
-                                <SearchIcon
-                                    color={searchIcon}
-                                    w="15px"
-                                    h="15px"
-                                />
-                            }
-                        ></IconButton>
-                    }
-                />
-                <Input
-                    fontSize="xs"
-                    py="11px"
-                    color={mainText}
-                    placeholder="Type here..."
-                    borderRadius="inherit"
-                />
-            </InputGroup>
-
             <Menu>
                 <MenuButton>
                     <Button

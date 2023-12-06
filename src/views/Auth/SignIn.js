@@ -1,27 +1,25 @@
-import React, { useRef } from "react";
 // Chakra imports
 import {
     Box,
-    Flex,
     Button,
+    Flex,
     FormControl,
+    FormErrorMessage,
     FormLabel,
     Heading,
     Input,
+    Spacer,
     Switch,
     Text,
     useColorModeValue,
-    FormErrorMessage,
-    Spacer,
 } from "@chakra-ui/react";
 // Assets
 import signInImage from "assets/img/ImageArchitect1.png";
+import axiosClient from "axios-client";
+import { useStateContext } from "context/ContextProvider";
+import { requestForToken } from "fcm";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import axiosClient from "axios-client";
-import axios from "axios";
-import { useStateContext } from "context/ContextProvider";
-import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 
 function SignIn() {
     // Chakra color mode
@@ -29,11 +27,13 @@ function SignIn() {
     const textColor = useColorModeValue("gray.400", "white");
     const { setName, setToken } = useStateContext();
 
-    const onSubmit = (values, { setSubmitting }) => {
+    const onSubmit = async (values, { setSubmitting }) => {
         const data = {
             ...values,
+            token: await requestForToken(),
             type: "WEB",
         };
+        console.log(data);
         axiosClient
             .post("/v1/login", data)
             .then((response) => {
