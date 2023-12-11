@@ -1,34 +1,46 @@
 // Chakra imports
-import { Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import ListView from "../../../components/Layout/ListView";
+import { Button, Flex } from "@chakra-ui/react";
 import axiosClient from "axios-client";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { DateObject } from "react-multi-date-picker";
+import ListView from "../../../components/Layout/ListView";
 
 function Sporadiks() {
-    const [sporadik, setSporadiks] = useState([]);
+    const [sporadiks, setSporadiks] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const filter = {
+        periode: [
+            new DateObject().subtract(90, "days"),
+            new DateObject().add(1, "days"),
+        ],
+
+        start_date: new DateObject().subtract(90, "days").format("YYYY-MM-DD"),
+        end_date: new DateObject().add(1, "days").format("YYYY-MM-DD"),
+    };
+
     useEffect(() => {
-        getDatas();
+        getDatas(filter);
     }, []);
 
-    const getDatas = () => {
+    const getDatas = (filter) => {
         setLoading(true);
         axiosClient
-            .get("/v1/sporadik")
+            .get("/v1/sporadiks", { params: filter })
             .then(({ data }) => {
                 setLoading(false);
-                setSporadiks(data.data.data);
+                let datas = data.data.data;
+                setSporadiks([]);
+                if (datas) setSporadiks(datas);
             })
             .catch(() => {
                 setLoading(false);
             });
     };
 
-    const deleteSporadik = (id) => {
+    const deleteBerpergian = (id) => {
         axiosClient
-            .delete("/v1/sporadik/" + id)
+            .delete("/v1/sporadiks/" + id)
             .then((response) => {
                 if (response.status == 200) {
                     console.log(response);
@@ -42,17 +54,19 @@ function Sporadiks() {
 
     const columnsData1 = [
         {
-            Header: "Kode",
+            Header: "Kode Surat",
             accessor: "kode_surat",
         },
         {
             Header: "NIK",
             accessor: "nik",
         },
+
         {
-            Header: "Keperluan",
+            Header: "Keterangan",
             accessor: "keterangan",
         },
+
         {
             Header: "Tgl Dibuat",
             accessor: "created_at",
@@ -63,16 +77,29 @@ function Sporadiks() {
         },
     ];
 
+    const actions = () => {
+        return (
+            <Button p="0px" bg="transparent">
+                <Flex cursor="pointer" align="center" p="6px">
+                    TES
+                </Flex>
+            </Button>
+        );
+    };
+
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
             <ListView
-                title={"Daftar Keterangan Sporadik"}
+                title={"Daftar Sporadik"}
                 captions={columnsData1}
-                data={sporadik}
+                data={sporadiks}
                 loading={loading}
-                actionType="print"
-                path="/sporadik"
-                onDelete={deleteSporadik}
+                path="/sporadiks"
+                actionType="view_only"
+                onDelete={deleteBerpergian}
+                onFilter={getDatas}
+                initialValues={filter}
+                status={true}
             />
         </Flex>
     );

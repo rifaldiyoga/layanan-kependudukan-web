@@ -16,6 +16,7 @@ import {
     Spacer,
     Switch,
     Text,
+    Textarea,
     useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -103,6 +104,18 @@ function LayananForm() {
         );
     };
 
+    const InputTextAreas = ({ field, form, ...props }) => {
+        return (
+            <Textarea
+                {...field}
+                {...props}
+                borderRadius="15px"
+                fontSize="sm"
+                size="lg"
+            />
+        );
+    };
+
     const Selects = ({ field, form, ...props }) => {
         return (
             <Select
@@ -130,6 +143,20 @@ function LayananForm() {
                 isChecked={field.value}
                 onChange={(event) => {
                     form.setFieldValue("is_confirm", event.target.checked);
+                }}
+            />
+        );
+    };
+
+    const SwitchSigns = ({ field, form, ...props }) => {
+        return (
+            <Switch
+                id="is_sign"
+                name="is_sign"
+                value={field.value}
+                isChecked={field.value}
+                onChange={(event) => {
+                    form.setFieldValue("is_sign", event.target.checked);
                 }}
             />
         );
@@ -169,6 +196,8 @@ function LayananForm() {
                                         "name",
                                         "type",
                                         "is_confirm",
+                                        "is_sign",
+                                        "info",
                                     ];
                                     fields.forEach((field) => {
                                         setFieldValue(
@@ -258,6 +287,28 @@ function LayananForm() {
                                             </FormErrorMessage>
                                         </FormControl>
                                         <FormControl
+                                            isInvalid={errors.info}
+                                            mb="16px"
+                                        >
+                                            <FormLabel
+                                                ms="4px"
+                                                fontSize="sm"
+                                                fontWeight="normal"
+                                            >
+                                                Informasi Layanan
+                                            </FormLabel>
+                                            <Field
+                                                placeholder="Informasi Layanan"
+                                                name="info"
+                                                height="200px"
+                                                component={InputTextAreas}
+                                            />
+
+                                            <FormErrorMessage>
+                                                {errors.info}
+                                            </FormErrorMessage>
+                                        </FormControl>
+                                        <FormControl
                                             isInvalid={errors.is_confirm}
                                             mb="32px"
                                         >
@@ -275,6 +326,26 @@ function LayananForm() {
 
                                             <FormErrorMessage>
                                                 {errors.is_confirm}
+                                            </FormErrorMessage>
+                                        </FormControl>
+                                        <FormControl
+                                            isInvalid={errors.is_sign}
+                                            mb="32px"
+                                        >
+                                            <FormLabel
+                                                ms="4px"
+                                                fontSize="sm"
+                                                fontWeight="normal"
+                                            >
+                                                Tanda Tangan Lurah
+                                            </FormLabel>
+                                            <Field
+                                                name="is_sign"
+                                                component={SwitchSigns}
+                                            />
+
+                                            <FormErrorMessage>
+                                                {errors.is_sign}
                                             </FormErrorMessage>
                                         </FormControl>
                                     </Flex>

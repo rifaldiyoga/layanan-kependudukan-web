@@ -5,7 +5,7 @@ export const Header = () => {
     return (
         <Flex direction="column">
             <Flex direction="row" alignSelf="center">
-                <Box me={8}>
+                <Box position={"absolute"} ml={-20}>
                     <Image src={signInImage} width="80px" />
                 </Box>
 

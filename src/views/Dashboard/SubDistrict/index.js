@@ -19,6 +19,7 @@ function SubDistricts() {
             .get("/v1/subdistricts")
             .then(({ data }) => {
                 setLoading(false);
+                console.log(data);
                 setSubDistricts(data.data.data);
             })
             .catch(() => {
@@ -51,7 +52,7 @@ function SubDistricts() {
         },
         {
             Header: "Kota",
-            accessor: "province",
+            accessor: "kota.name",
         },
         {
             Header: "Tgl Dibuat",

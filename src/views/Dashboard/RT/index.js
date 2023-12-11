@@ -51,7 +51,7 @@ function RTs() {
         },
         {
             Header: "RW",
-            accessor: "rw",
+            accessor: "rw.name",
         },
 
         {

@@ -18,6 +18,7 @@ function Kelurahans() {
         axiosClient
             .get("/v1/kelurahans")
             .then(({ data }) => {
+                console.log(data);
                 setLoading(false);
                 setKelurahans(data.data.data);
             })
@@ -51,7 +52,7 @@ function Kelurahans() {
         },
         {
             Header: "Kecamatan",
-            accessor: "kecamatan",
+            accessor: "kecamatan.name",
         },
 
         {

@@ -19,6 +19,7 @@ function Layanans() {
             .get("/v1/layanans/paging")
             .then(({ data }) => {
                 setLoading(false);
+                console.log(data);
                 setLayanans(data.data.data);
             })
             .catch(() => {
@@ -52,6 +53,14 @@ function Layanans() {
         {
             Header: "Type",
             accessor: "type",
+        },
+        {
+            Header: "Konfirmasi RT / RW",
+            accessor: "is_confirm",
+        },
+        {
+            Header: "Tanda Tangan Lurah",
+            accessor: "is_sign",
         },
 
         {

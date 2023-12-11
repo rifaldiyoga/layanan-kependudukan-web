@@ -241,7 +241,7 @@ const KeramaianTemplate = () => {
                 </ol>
             </Text>
             <Text color={"white"}>\n</Text>
-            <Footer penduduk={datas.penduduk} isUser={false} />
+            <Footer penduduk={datas.penduduk} isUser={false} id={23} />
         </Flex>
     ) : (
         <Flex />

@@ -1,32 +1,44 @@
 // Chakra imports
-import { Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import ListView from "../../../components/Layout/ListView";
+import { Button, Flex } from "@chakra-ui/react";
 import axiosClient from "axios-client";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { DateObject } from "react-multi-date-picker";
+import ListView from "../../../components/Layout/ListView";
 
-function PindahKeluars() {
-    const [pindahs, setPindahKeluars] = useState([]);
+function Pindahs() {
+    const [pindahs, setPindahs] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const filter = {
+        periode: [
+            new DateObject().subtract(90, "days"),
+            new DateObject().add(1, "days"),
+        ],
+
+        start_date: new DateObject().subtract(90, "days").format("YYYY-MM-DD"),
+        end_date: new DateObject().add(1, "days").format("YYYY-MM-DD"),
+    };
+
     useEffect(() => {
-        getDatas();
+        getDatas(filter);
     }, []);
 
-    const getDatas = () => {
+    const getDatas = (filter) => {
         setLoading(true);
         axiosClient
-            .get("/v1/pindahs")
+            .get("/v1/pindahs", { params: filter })
             .then(({ data }) => {
                 setLoading(false);
-                setPindahKeluars(data.data.data);
+                let datas = data.data.data;
+                setPindahs([]);
+                if (datas) setPindahs(datas);
             })
             .catch(() => {
                 setLoading(false);
             });
     };
 
-    const deletePindahKeluar = (id) => {
+    const deletePindah = (id) => {
         axiosClient
             .delete("/v1/pindahs/" + id)
             .then((response) => {
@@ -42,21 +54,24 @@ function PindahKeluars() {
 
     const columnsData1 = [
         {
-            Header: "Kode",
+            Header: "Kode Surat",
             accessor: "kode_surat",
-        },
-        {
-            Header: "NIK",
-            accessor: "nik",
         },
         {
             Header: "Jenis",
             accessor: "type",
         },
+
         {
-            Header: "Keperluan",
+            Header: "NIK",
+            accessor: "nik",
+        },
+
+        {
+            Header: "Keterangan",
             accessor: "alasan_pindah",
         },
+
         {
             Header: "Tgl Dibuat",
             accessor: "created_at",
@@ -67,6 +82,16 @@ function PindahKeluars() {
         },
     ];
 
+    const actions = () => {
+        return (
+            <Button p="0px" bg="transparent">
+                <Flex cursor="pointer" align="center" p="6px">
+                    TES
+                </Flex>
+            </Button>
+        );
+    };
+
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
             <ListView
@@ -74,12 +99,14 @@ function PindahKeluars() {
                 captions={columnsData1}
                 data={pindahs}
                 loading={loading}
-                actionType="print"
                 path="/pindahs"
-                onDelete={deletePindahKeluar}
+                actionType="print"
+                onDelete={deletePindah}
+                onFilter={getDatas}
+                initialValues={filter}
             />
         </Flex>
     );
 }
 
-export default PindahKeluars;
+export default Pindahs;

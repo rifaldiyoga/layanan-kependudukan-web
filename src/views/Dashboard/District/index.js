@@ -51,7 +51,7 @@ function Districts() {
         },
         {
             Header: "Provinsi",
-            accessor: "province",
+            accessor: "provinsi.name",
         },
         {
             Header: "Tgl Dibuat",

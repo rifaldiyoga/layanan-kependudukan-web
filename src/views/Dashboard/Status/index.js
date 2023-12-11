@@ -42,11 +42,11 @@ function Status() {
 
     const columnsData1 = [
         {
-            Header: "Kode Status Dalam Rumah Keluarga",
+            Header: "Kode ",
             accessor: "code",
         },
         {
-            Header: "Nama Status Dalam Rumah Keluarga",
+            Header: "Status Keluarga",
             accessor: "name",
         },
 

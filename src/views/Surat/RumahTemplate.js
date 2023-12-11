@@ -177,7 +177,7 @@ const RumahTemplate = () => {
                 dapat dipergunakan sebagimana mestinya.
             </Text>
             <Text color={"white"}>\n</Text>
-            <Footer penduduk={datas.penduduk} isUser={false} />
+            <Footer penduduk={datas.penduduk} isUser={false} id={30} />
         </Flex>
     ) : (
         <Flex />

@@ -1,12 +1,13 @@
+import signInImage from "assets/img/logo_kota_batu.png";
 import axiosClient from "axios-client";
-import { Footer } from "components/Surat/Footer";
 import { Header } from "components/Surat/Header";
 import { SubHeader } from "components/Surat/SubHeader";
-import { statusNikah } from "constants";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import Helper from "../../helper/Helper";
+import { statusNikah } from "constants";
 import "./style.css";
+import { Footer } from "components/Surat/Footer";
 const {
     Image,
     Flex,
@@ -25,23 +26,24 @@ const JandaTemplate = () => {
     let { id } = useParams();
     const [datas, setDatas] = useState(null);
 
+    useEffect(() => {
+        getDatas();
+    }, []);
+
     const getDatas = () => {
         axiosClient
-            .get("/v1/domisilis/" + id)
+            .get("/v1/jandas/" + id)
             .then(({ data }) => {
                 console.log(data.data);
                 console.log(datas);
                 setDatas(data.data);
             })
-            .catch(() => {});
+            .catch(() => {
+                console.log();
+            });
     };
 
-    useEffect(() => {
-        getDatas();
-    }, []);
-
     console.log(datas);
-
     return datas ? (
         <Flex
             direction="column"
@@ -56,7 +58,7 @@ const JandaTemplate = () => {
         >
             <Header />
             <SubHeader
-                name="SURAT KETERANGAN DUDA / JANDA"
+                name="SURAT KETERANGAN JANDA / DUDA"
                 no_surat={datas.kode_surat}
                 size={22}
             />
@@ -137,8 +139,10 @@ const JandaTemplate = () => {
                         <td>:</td>
                         <td>
                             <text lineHeight={1.5}>
-                                {Helper.capitalizeFirstLetter(datas.penduduk.address)} RT{" "}
-                                {datas.penduduk.rt.name} / RW{" "}
+                                {Helper.capitalizeFirstLetter(
+                                    datas.penduduk.address
+                                )}{" "}
+                                Rt {datas.penduduk.rt.name} / RW{" "}
                                 {datas.penduduk.rw.name} <br />
                                 {datas.penduduk.kelurahan.name} Kecamatan{" "}
                                 {Helper.capitalizeFirstLetter(
@@ -155,86 +159,29 @@ const JandaTemplate = () => {
                     </tr>
                 </tbody>
             </table>
-            {datas.type == "Perorangan" ? (
-                <Text textAlign="justify" style={{ lineHeight: 2 }}>
-                    Adalah benar-benar penduduk Kelurahan Ngaglik Kecamatan Batu
-                    Kota Batu.
-                    <ol>
-                        <li>
-                            Menerangkan bahwa berdasarkan pengantar dari ketua
-                            RT {datas.penduduk.rt.name} RW{" "}
-                            {datas.penduduk.rw.name} serta surat pernyataan dari
-                            yang bersangkutan bahwa orang tersebut diatas
-                            benar-benar warga kami.
-                        </li>
-
-                        <li>
-                            Surat Keterangan ini digunakan untuk{" "}
-                            <b>{datas.keterangan}</b>.
-                        </li>
-                    </ol>
-                </Text>
-            ) : (
-                <Flex direction="column">
-                    <Text>
-                        Benar saat ini Membuka / Mempunyai Usaha sebagai berikut
-                    </Text>
-                    <table fontSize={14}>
-                        <tbody>
-                            <tr p={8}>
-                                <td>Nama Perusahaan</td>
-                                <td>:</td>
-                                <td style={{ fontWeight: "bold" }}>
-                                    {" "}
-                                    {datas.nama_perusahaan.toUpperCase()}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Jenis Usaha</td>
-                                <td>:</td>
-                                <td>{datas.jenis_perusahaan}</td>
-                            </tr>
-                            <tr>
-                                <td>Alamat Perusahaan</td>
-                                <td>:</td>
-                                <td>{datas.alamat_perusahaan}</td>
-                            </tr>
-                            <tr>
-                                <td>No. Telpon Perusahaan</td>
-                                <td>:</td>
-                                <td>{datas.telp_perusahaan}</td>
-                            </tr>
-                            <tr>
-                                <td>Status Bangunan</td>
-                                <td>:</td>
-                                <td>{datas.status_bangunan}</td>
-                            </tr>
-                            <tr>
-                                <td>No. Akta Pendirian</td>
-                                <td>:</td>
-                                <td>{datas.akta_perusahaan}</td>
-                            </tr>
-                            <tr>
-                                <td>SK. Pengesahan</td>
-                                <td>:</td>
-                                <td>{datas.sk_pengesahan}</td>
-                            </tr>
-                            <tr>
-                                <td>Penanggung Jawab</td>
-                                <td>:</td>
-                                <td>{datas.penanggung_jawab}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </Flex>
-            )}
-            <Text>
+            <Text textAlign="justify" style={{ lineHeight: 2 }}>
+                Adalah benar-benar penduduk Kelurahan Ngaglik Kecamatan Batu
+                Kota Batu.
+                <ol>
+                    <li>
+                        Menerangkan bahwa berdasarkan pengantar dari ketua RT{" "}
+                        {datas.penduduk.rt.name} RW {datas.penduduk.rw.name}{" "}
+                        serta surat kematian / surat perceraian dari yang
+                        bersangkutan yang bersangkutan benar-benar Janda / Duda
+                        dan sampai sekarang belum menikah lagi.
+                    </li>
+                    <li>
+                        Surat Keterangan ini digunakan untuk{" "}
+                        <b>{datas.keterangan}</b> dan memenuhi salah satu
+                        persyaratan <b>Surat Keterangan Catatan Janda (SKCK)</b>
+                        .
+                    </li>
+                </ol>
                 Demikian surat keterangan ini dibuat dengan sebenarnya dan agar
                 dapat dipergunakan sebagimana mestinya.
             </Text>
             <Text color={"white"}>\n</Text>
-            <Footer penduduk={datas.penduduk} isUser={false} />
+            <Footer penduduk={datas.penduduk} isUser={false} id={28} />
         </Flex>
     ) : (
         <Flex />

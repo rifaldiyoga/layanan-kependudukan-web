@@ -503,26 +503,6 @@ var dashRoutes = [
                     },
                 ],
             },
-            {
-                path: "/sporadiks",
-                name: "Sporadik",
-                rtlName: "لوحة القيادة",
-                icon: <FaCross color="inherit" />,
-                component: Sporadik,
-                layout: "/admin",
-                views: [
-                    {
-                        path: "/new",
-                        component: SporadikForm,
-                        key: "new",
-                    },
-                    {
-                        path: "/:id",
-                        component: SporadikForm,
-                        key: "edit",
-                    },
-                ],
-            },
         ],
     },
     {

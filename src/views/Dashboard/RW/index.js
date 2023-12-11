@@ -51,7 +51,7 @@ function RWs() {
         },
         {
             Header: "Kelurahan",
-            accessor: "kelurahan",
+            accessor: "kelurahan.name",
         },
 
         {

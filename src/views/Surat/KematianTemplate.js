@@ -22,15 +22,16 @@ const {
     Spacer,
 } = require("@chakra-ui/react");
 
-const TanahTemplate = () => {
+const KematianTemplate = () => {
     let { id } = useParams();
     const [datas, setDatas] = useState(null);
-    const [saksis, setSaksi] = useState([]);
 
     const getDatas = () => {
         axiosClient
-            .get("/v1/tanahs/" + id)
+            .get("/v1/kematians/" + id)
             .then(({ data }) => {
+                console.log(data.data);
+                console.log(datas);
                 setDatas(data.data);
             })
             .catch(() => {});
@@ -56,19 +57,13 @@ const TanahTemplate = () => {
         >
             <Header />
             <SubHeader
-                name={
-                    datas.type != "Sporadik"
-                        ? "SURAT KETERANGAN KEPEMELIKAN TANAH"
-                        : "SURAT PERNYATAAN PENGUASAAN FISIK BIDANG TANAH ( SPORADIK )"
-                }
+                name={"SURAT KETERANGAN KEMATIAN"}
                 no_surat={datas.kode_surat}
-                size={datas.type != "Sporadik" ? 22 : 16}
+                size={24}
             />
             <Text style={{ lineHeight: 1.5 }}>
                 Yang bertanda tangan dibawah ini, Lurah Ngaglik Kecamatan Batu
-                Pemerintah Kota Batu, menerangkan bahwa berdasarkan Surat
-                Pernyataan yang dibuat pada tanggal {Helper.formatDate(Date())}{" "}
-                oleh :
+                Pemerintah Kota Batu, menerangkan bahwa :
             </Text>
             <table fontSize={14}>
                 <tbody>
@@ -77,7 +72,22 @@ const TanahTemplate = () => {
                         <td>:</td>
                         <td style={{ fontWeight: "bold" }}>
                             {" "}
-                            {datas.penduduk.fullname.toUpperCase()}
+                            {datas.jenazah.fullname.toUpperCase()}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>NIK</td>
+                        <td>:</td>
+                        <td>{datas.jenazah.nik}</td>
+                    </tr>
+                    <tr>
+                        <td>Jenis Kelamin</td>
+                        <td>:</td>
+                        <td>
+                            {datas.jenazah.jk == "L"
+                                ? "Laki - Laki"
+                                : "Perempuan"}
                         </td>
                     </tr>
                     <tr>
@@ -85,15 +95,43 @@ const TanahTemplate = () => {
                         <td>:</td>
                         <td>
                             {Helper.capitalizeFirstLetter(
-                                datas.penduduk.birth_place
+                                datas.jenazah.birth_place
                             )}
-                            , {Helper.formatDate(datas.penduduk.birth_date)}
+                            , {Helper.formatDate(datas.jenazah.birth_date)}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Agama</td>
+                        <td>:</td>
+                        <td>
+                            {Helper.capitalizeFirstLetter(
+                                datas.jenazah.religion.name
+                            )}
                         </td>
                     </tr>
                     <tr>
                         <td>Pekerjaan</td>
                         <td>:</td>
-                        <td>{datas.penduduk.job.name}</td>
+                        <td>{datas.jenazah.job.name}</td>
+                    </tr>
+                    <tr>
+                        <td>Status Perkawinan</td>
+                        <td>:</td>
+                        <td>
+                            {
+                                statusNikah.find((obj) => {
+                                    console.log(obj);
+                                    return (
+                                        obj.value === datas.jenazah.maried_type
+                                    );
+                                }).label
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Kewarganegaraan</td>
+                        <td>:</td>
+                        <td>{datas.jenazah.nationality}</td>
                     </tr>
                     <tr>
                         <td>Alamat</td>
@@ -101,10 +139,10 @@ const TanahTemplate = () => {
                         <td>
                             <text lineHeight={1.5}>
                                 {Helper.capitalizeFirstLetter(
-                                    datas.penduduk.address
+                                    datas.jenazah.address
                                 )}{" "}
-                                RT {datas.penduduk.rt.name} / RW{" "}
-                                {datas.penduduk.rw.name} <br />
+                                Rt {datas.jenazah.rt.name} / RW{" "}
+                                {datas.jenazah.rw.name} <br />
                                 {datas.penduduk.kelurahan.name} Kecamatan{" "}
                                 {Helper.capitalizeFirstLetter(
                                     datas.penduduk.kecamatan.name
@@ -120,52 +158,28 @@ const TanahTemplate = () => {
                     </tr>
                 </tbody>
             </table>
-            <Text>
-                Bahwa setelah dicocokan dengan buku Registrasi Kelurahan
-                Ngaglik, maka tanah dengan SPPT PBB No. . Atas nama dengan luas{" "}
-                {datas.luas_tanah} yang terletak di {datas.lokasi_tanah} dengan
-                batas-batas sebagai berikut :
-            </Text>
-            <table fontSize={14}>
-                <tbody>
-                    <tr>
-                        <td width="30%">Batas Utara</td>
-                        <td width="4px">:</td>
-                        <td>{datas.batas_utara}</td>
-                    </tr>
-                    <tr>
-                        <td>Batas Selatan</td>
-                        <td>:</td>
-                        <td>{datas.batas_selatan}</td>
-                    </tr>
-                    <tr>
-                        <td>Batas Timur</td>
-                        <td>:</td>
-                        <td>{datas.batas_timur}</td>
-                    </tr>
-                    <tr>
-                        <td>Batas Barat</td>
-                        <td>:</td>
-                        <td>{datas.batas_barat}</td>
-                    </tr>
-                </tbody>
-            </table>
+
             <Text textAlign="justify" style={{ lineHeight: 2 }}>
-                Demikian surat keterangan ini dibuat dengan sebenarnya dan agar
+                Adalah benar-benar penduduk Kelurahan Ngaglik Kecamatan Batu
+                Kota Batu.
+                <ol>
+                    <li>
+                        Surat Keterangan ini digunakan untuk {datas.keterangan}{" "}
+                        dan memenuhi salah satu persyaratan mengurus Akta
+                        Kematian pada Dinas Kependudukan dan Pencatatan Sipil.
+                    </li>
+                </ol>
+            </Text>
+            <Text textAlign="justify" style={{ lineHeight: 2 }}>
+                Demikian surat pengantar ini dibuat dengan sebenarnya dan agar
                 dapat dipergunakan sebagimana mestinya.
             </Text>
             <Text color={"white"}>\n</Text>
-            <Footer
-                penduduk={datas.penduduk}
-                isUser={false}
-                isSaksi={true}
-                saksi={[datas.saksi1, datas.saksi2]}
-                id={datas.type != "Sporadik" ? 26 : 31}
-            />
+            <Footer penduduk={datas.penduduk} isUser={false} id={24} />
         </Flex>
     ) : (
         <Flex />
     );
 };
 
-export default TanahTemplate;
+export default KematianTemplate;

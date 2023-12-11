@@ -1,24 +1,36 @@
 // Chakra imports
-import { Button, Flex, Icon } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import ListView from "../../../components/Layout/ListView";
+import { Button, Flex } from "@chakra-ui/react";
 import axiosClient from "axios-client";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { DateObject } from "react-multi-date-picker";
+import ListView from "../../../components/Layout/ListView";
 
 function Pengajuans() {
     const [pengajuans, setPengajuans] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const filter = {
+        periode: [
+            new DateObject().subtract(90, "days"),
+            new DateObject().add(1, "days"),
+        ],
+        status: "PENDING",
+        start_date: new DateObject().subtract(90, "days").format("YYYY-MM-DD"),
+        end_date: new DateObject().add(1, "days").format("YYYY-MM-DD"),
+    };
+
     useEffect(() => {
-        getDatas();
+        getDatas(filter);
     }, []);
 
-    const getDatas = () => {
+    const getDatas = (filter) => {
         setLoading(true);
         axiosClient
-            .get("/v1/pengajuans/admin")
+            .get("/v1/pengajuans/admin", { params: filter })
             .then(({ data }) => {
                 setLoading(false);
+
+                setPengajuans([]);
                 let datas = data.data.data.map((d) => {
                     let stat = "Menunggu Persetujuan Kelurahan";
                     if (d.status == "VALID") {
@@ -105,6 +117,9 @@ function Pengajuans() {
                 path="/pengajuans"
                 actionType="view_only"
                 onDelete={deletePengajuan}
+                onFilter={getDatas}
+                initialValues={filter}
+                status={true}
             />
         </Flex>
     );

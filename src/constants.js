@@ -19,3 +19,22 @@ export const statusNikah = [
         label: "Cerai Mati",
     },
 ];
+
+export const statusPengajuan = [
+    {
+        value: "ALL",
+        label: "Semua",
+    },
+    {
+        value: "PENDING",
+        label: "Belum Diproses",
+    },
+    {
+        value: "VALID",
+        label: "Disetujui",
+    },
+    {
+        value: "REJECTED",
+        label: "Ditolak",
+    },
+];

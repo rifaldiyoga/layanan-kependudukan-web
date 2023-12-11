@@ -1,25 +1,39 @@
 // Chakra imports
-import { Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import ListView from "../../../components/Layout/ListView";
+import { Button, Flex } from "@chakra-ui/react";
 import axiosClient from "axios-client";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { DateObject } from "react-multi-date-picker";
+import ListView from "../../../components/Layout/ListView";
 
 function Berpergians() {
     const [berpergians, setBerpergians] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const filter = {
+        periode: [
+            new DateObject().subtract(90, "days"),
+            new DateObject().add(1, "days"),
+        ],
+
+        start_date: new DateObject().subtract(90, "days").format("YYYY-MM-DD"),
+        end_date: new DateObject().add(1, "days").format("YYYY-MM-DD"),
+    };
+
     useEffect(() => {
-        getDatas();
+        getDatas(filter);
     }, []);
 
-    const getDatas = () => {
+    const getDatas = (filter) => {
         setLoading(true);
         axiosClient
-            .get("/v1/berpergians")
+            .get("/v1/berpergians", { params: filter })
             .then(({ data }) => {
                 setLoading(false);
-                setBerpergians(data.data.data);
+                setBerpergians([]);
+                let datas = data.data.data;
+                if (datas) {
+                    setBerpergians(datas);
+                }
             })
             .catch(() => {
                 setLoading(false);
@@ -42,17 +56,19 @@ function Berpergians() {
 
     const columnsData1 = [
         {
-            Header: "Kode",
+            Header: "Kode Surat",
             accessor: "kode_surat",
         },
         {
             Header: "NIK",
             accessor: "nik",
         },
+
         {
-            Header: "Keperluan",
+            Header: "Keterangan",
             accessor: "keterangan",
         },
+
         {
             Header: "Tgl Dibuat",
             accessor: "created_at",
@@ -63,16 +79,28 @@ function Berpergians() {
         },
     ];
 
+    const actions = () => {
+        return (
+            <Button p="0px" bg="transparent">
+                <Flex cursor="pointer" align="center" p="6px">
+                    TES
+                </Flex>
+            </Button>
+        );
+    };
+
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
             <ListView
-                title={"Daftar Keterangan Berpergian / Boro Kerja"}
+                title={"Daftar Berpergerian"}
                 captions={columnsData1}
                 data={berpergians}
                 loading={loading}
                 path="/berpergians"
                 actionType="print"
                 onDelete={deleteBerpergian}
+                onFilter={getDatas}
+                initialValues={filter}
             />
         </Flex>
     );

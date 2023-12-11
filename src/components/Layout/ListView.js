@@ -26,9 +26,12 @@ const ListView = ({
     loading,
     path,
     onDelete,
+    onFilter,
+    initialValues,
     actionType,
+    status,
 }) => {
-    const [list, setData] = useState({ data });
+    const [list, setData] = useState([]);
 
     useEffect(() => {
         setData(data);
@@ -64,20 +67,16 @@ const ListView = ({
                 </Link>
             </Flex>
             <CardBody>
-                {list && list.length > 0 ? (
-                    <SearchTable1
-                        tableData={list}
-                        columnsData={captions}
-                        path={path}
-                        onDelete={onDelete}
-                        actionType={actionType}
-                    />
-                ) : (
-                    <Flex>
-                        <Spacer />
-                        <Text m="16px">Tidak ada data</Text>
-                    </Flex>
-                )}
+                <SearchTable1
+                    tableData={list}
+                    columnsData={captions}
+                    path={path}
+                    onDelete={onDelete}
+                    onFilter={onFilter}
+                    actionType={actionType}
+                    initialValues={initialValues}
+                    status={status}
+                />
             </CardBody>
         </Card>
     );

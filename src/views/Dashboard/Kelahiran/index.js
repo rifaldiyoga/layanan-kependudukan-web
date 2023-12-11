@@ -1,32 +1,44 @@
 // Chakra imports
-import { Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import ListView from "../../../components/Layout/ListView";
+import { Button, Flex } from "@chakra-ui/react";
 import axiosClient from "axios-client";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { DateObject } from "react-multi-date-picker";
+import ListView from "../../../components/Layout/ListView";
 
 function Kelahirans() {
     const [kelahirans, setKelahirans] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const filter = {
+        periode: [
+            new DateObject().subtract(90, "days"),
+            new DateObject().add(1, "days"),
+        ],
+
+        start_date: new DateObject().subtract(90, "days").format("YYYY-MM-DD"),
+        end_date: new DateObject().add(1, "days").format("YYYY-MM-DD"),
+    };
+
     useEffect(() => {
-        getDatas();
+        getDatas(filter);
     }, []);
 
-    const getDatas = () => {
+    const getDatas = (filter) => {
         setLoading(true);
         axiosClient
-            .get("/v1/kelahirans")
+            .get("/v1/kelahirans", { params: filter })
             .then(({ data }) => {
                 setLoading(false);
-                setKelahirans(data.data.data);
+                let datas = data.data.data;
+                setKelahirans([]);
+                if (datas) setKelahirans(datas);
             })
             .catch(() => {
                 setLoading(false);
             });
     };
 
-    const deleteKelahiran = (id) => {
+    const deleteBerpergian = (id) => {
         axiosClient
             .delete("/v1/kelahirans/" + id)
             .then((response) => {
@@ -42,16 +54,17 @@ function Kelahirans() {
 
     const columnsData1 = [
         {
-            Header: "Kode Kelahiran",
-            accessor: "code",
+            Header: "Kode Surat",
+            accessor: "kode_surat",
         },
         {
-            Header: "Nama Kelahiran",
-            accessor: "name",
+            Header: "NIK",
+            accessor: "nik",
         },
+
         {
-            Header: "Type",
-            accessor: "type",
+            Header: "Keterangan",
+            accessor: "keterangan",
         },
 
         {
@@ -64,6 +77,16 @@ function Kelahirans() {
         },
     ];
 
+    const actions = () => {
+        return (
+            <Button p="0px" bg="transparent">
+                <Flex cursor="pointer" align="center" p="6px">
+                    TES
+                </Flex>
+            </Button>
+        );
+    };
+
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
             <ListView
@@ -72,7 +95,10 @@ function Kelahirans() {
                 data={kelahirans}
                 loading={loading}
                 path="/kelahirans"
-                onDelete={deleteKelahiran}
+                actionType="print"
+                onDelete={deleteBerpergian}
+                onFilter={getDatas}
+                initialValues={filter}
             />
         </Flex>
     );

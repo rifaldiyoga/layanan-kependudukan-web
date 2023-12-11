@@ -182,7 +182,7 @@ const SKTMTemplate = () => {
                 dapat dipergunakan sebagimana mestinya.
             </Text>
             <Text color={"white"}>\n</Text>
-            <Footer penduduk={datas.penduduk} isUser={true} />
+            <Footer penduduk={datas.penduduk} isUser={true} id={26} />
         </Flex>
     ) : (
         <Flex />

@@ -1,8 +1,18 @@
 import {
     AbsoluteCenter,
     Button,
+    Center,
+    Drawer,
+    DrawerBody,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
     Flex,
+    FormLabel,
     Icon,
+    IconButton,
     Input,
     Modal,
     ModalBody,
@@ -27,7 +37,8 @@ import {
     Tr,
     useDisclosure,
 } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
+
+import { useMemo, useState } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import {
     TiArrowSortedDown,
@@ -41,7 +52,17 @@ import {
     useTable,
 } from "react-table";
 
-import { FaEye, FaPencilAlt, FaTrashAlt, FaPrint } from "react-icons/fa";
+import { CustomDatePicker } from "components/Inputs/DatePicker";
+import SearchSelect from "components/Select/SearchSelect";
+import { statusPengajuan } from "constants";
+import { Field, Form, Formik } from "formik";
+import {
+    FaEye,
+    FaFilter,
+    FaPencilAlt,
+    FaPrint,
+    FaTrashAlt,
+} from "react-icons/fa";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const defaultActions = (actionType, path, row, setSelectedId, onOpen) => {
@@ -120,17 +141,47 @@ const defaultActions = (actionType, path, row, setSelectedId, onOpen) => {
         );
 };
 
+const DatePickers = ({ field, form, ...props }) => {
+    return (
+        <CustomDatePicker
+            {...field}
+            {...props}
+            form={form}
+            field={field}
+            borderRadius="15px"
+            fontSize="sm"
+            size="lg"
+        />
+    );
+};
+
+const Inputs = ({ field, form, ...props }) => {
+    return (
+        <Input
+            {...field}
+            {...props}
+            borderRadius="15px"
+            fontSize="sm"
+            size="lg"
+        />
+    );
+};
+
 function SearchTable1(props) {
     const {
         columnsData,
         tableData,
         path,
         onDelete,
+        onFilter,
+        initialValues,
         actionType = "default",
+        status,
     } = props;
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    const [isOpenDrawer, setOpenDrawer] = useState(false);
     const [selectedId, setSelectedId] = useState(0);
 
     const columns = useMemo(() => columnsData, []);
@@ -220,15 +271,29 @@ function SearchTable1(props) {
                             entries per page
                         </Text>
                     </Stack>
-                    <Input
-                        type="text"
-                        placeholder="Search..."
-                        minW="75px"
-                        maxW="175px"
-                        fontSize="sm"
-                        _focus={{ borderColor: "teal.300" }}
-                        onChange={(e) => setGlobalFilter(e.target.value)}
-                    />
+                    <Flex>
+                        <Input
+                            type="text"
+                            placeholder="Search..."
+                            minW="75px"
+                            maxW="175px"
+                            fontSize="sm"
+                            _focus={{ borderColor: "teal.300" }}
+                            onChange={(e) => setGlobalFilter(e.target.value)}
+                        />
+                        {onFilter && (
+                            <IconButton
+                                ms="16px"
+                                icon={<FaFilter />}
+                                variant="outline"
+                                borderRadius="6px"
+                                color="gray.400"
+                                onClick={() => {
+                                    setOpenDrawer(true);
+                                }}
+                            />
+                        )}
+                    </Flex>
                 </Flex>
                 <Table
                     {...getTableProps()}
@@ -279,6 +344,19 @@ function SearchTable1(props) {
                             </Tr>
                         ))}
                     </Thead>
+                    {pageCount == 0 ? (
+                        <Tbody>
+                            <Tr>
+                                <Td colSpan={columnsData.length}>
+                                    <Center>
+                                        <Text>Tidak Ada Data</Text>
+                                    </Center>
+                                </Td>
+                            </Tr>
+                        </Tbody>
+                    ) : (
+                        ""
+                    )}
                     <Tbody {...getTableBodyProps()}>
                         {page.map((row) => {
                             prepareRow(row);
@@ -297,6 +375,7 @@ function SearchTable1(props) {
                                             >
                                                 {cell.column.id != "action" &&
                                                     cell.render("Cell")}
+
                                                 {cell.column.id == "action" &&
                                                     defaultActions(
                                                         actionType,
@@ -367,13 +446,15 @@ function SearchTable1(props) {
                                 color="gray.400"
                             />
                         </Button>
-                        {pageSize === 5 ? (
+                        {pageCount > 8 ? (
                             <NumberInput
                                 max={pageCount - 1}
                                 min={1}
                                 w="75px"
                                 mx="6px"
+                                isDisabled={true}
                                 defaultValue="1"
+                                value={pageIndex + 1}
                                 onChange={(e) => gotoPage(e)}
                             >
                                 <NumberInputField />
@@ -383,7 +464,7 @@ function SearchTable1(props) {
                                     />
                                     <NumberDecrementStepper
                                         onClick={() => previousPage()}
-                                    />
+                                    />{" "}
                                 </NumberInputStepper>
                             </NumberInput>
                         ) : (
@@ -480,6 +561,115 @@ function SearchTable1(props) {
                     </ModalContent>
                 </Modal>
             </AbsoluteCenter>
+            <Formik
+                initialValues={initialValues}
+                validator={() => ({})}
+                onSubmit={(values) => {
+                    let data = {};
+
+                    if (values.periode) {
+                        data = {
+                            ...data,
+                            start_date: values.periode[0].format("YYYY-MM-DD"),
+                            end_date: values.periode[1].format("YYYY-MM-DD"),
+                        };
+                    }
+
+                    if (values.status) {
+                        data = {
+                            ...data,
+                            status: values.status,
+                        };
+                    }
+
+                    onFilter(data);
+                    setOpenDrawer(false);
+                }}
+            >
+                {({
+                    errors,
+                    touched,
+                    isSubmitting,
+                    setFieldValue,
+                    handleChange,
+                    submitForm,
+                    values,
+                }) => {
+                    return (
+                        <Form flex="1">
+                            <Drawer
+                                isOpen={isOpenDrawer}
+                                placement="right"
+                                onClose={() => {
+                                    setOpenDrawer(false);
+                                }}
+                                size="sm"
+                            >
+                                <DrawerOverlay />
+                                <DrawerContent>
+                                    <DrawerCloseButton />
+                                    <DrawerHeader>Filter Data</DrawerHeader>
+                                    <DrawerBody>
+                                        <Flex direction="column">
+                                            <Flex
+                                                mb={"16px"}
+                                                direction={"column"}
+                                            >
+                                                <FormLabel
+                                                    ms="4px"
+                                                    fontSize="sm"
+                                                    fontWeight="normal"
+                                                >
+                                                    Periode
+                                                </FormLabel>
+                                                <Field
+                                                    id="periode"
+                                                    name="periode"
+                                                    component={DatePickers}
+                                                />
+                                            </Flex>
+                                            {status ? (
+                                                <>
+                                                    <FormLabel
+                                                        ms="4px"
+                                                        fontSize="sm"
+                                                        fontWeight="normal"
+                                                    >
+                                                        Status
+                                                    </FormLabel>
+                                                    <Field
+                                                        placeholder="Status Pengajuan"
+                                                        name="status"
+                                                        options={
+                                                            statusPengajuan
+                                                        }
+                                                        component={SearchSelect}
+                                                    />
+                                                </>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </Flex>
+                                    </DrawerBody>
+                                    <DrawerFooter>
+                                        <Flex alignItems="center">
+                                            <Button
+                                                colorScheme="blue"
+                                                flex={1}
+                                                w={"100%"}
+                                                type="submit"
+                                                onClick={submitForm}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </Flex>
+                                    </DrawerFooter>
+                                </DrawerContent>
+                            </Drawer>
+                        </Form>
+                    );
+                }}
+            </Formik>
         </>
     );
 }
