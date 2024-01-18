@@ -6,6 +6,8 @@ import axiosClient from "axios-client";
 
 export const Footer = ({ penduduk, isUser, isSaksi, saksi, isSign, id }) => {
     const [layanans, setLayanans] = useState([]);
+    const [lurah, setLurah] = useState([]);
+    const [sistem, setSistems] = useState([]);
 
     let sak = saksi;
     if (saksi) {
@@ -24,8 +26,30 @@ export const Footer = ({ penduduk, isUser, isSaksi, saksi, isSign, id }) => {
             .catch(() => {});
     };
 
+    const getSistem = () => {
+        axiosClient
+            .get("/v1/sistems/1")
+            .then(({ data }) => {
+                console.log(data);
+                setSistems(data.data);
+            })
+            .catch(() => {});
+    };
+
+    const getLurah = () => {
+        axiosClient
+            .get("/v1/aparatur_desas/lurah")
+            .then(({ data }) => {
+                console.log(data);
+                setLurah(data.data);
+            })
+            .catch(() => {});
+    };
+
     useEffect(() => {
         getLayanan();
+        getSistem();
+        getLurah();
     }, []);
 
     console.log(layanans.is_sign);
@@ -64,7 +88,7 @@ export const Footer = ({ penduduk, isUser, isSaksi, saksi, isSign, id }) => {
         return (
             <Flex direction="column" style={{ textAlign: "center" }}>
                 <Text color={layanans.code != "SPORADIK" ? "white" : "black"}>
-                    Batu, {Helper.formatDate(Date())}
+                    {sistem?.kecamatan?.name} , {Helper.formatDate(Date())}
                 </Text>
                 <Text>Tanda Tangan</Text>
                 <Text> Yang Bersangkutan</Text>
@@ -92,13 +116,16 @@ export const Footer = ({ penduduk, isUser, isSaksi, saksi, isSign, id }) => {
         return (
             <Flex direction="column" style={{ textAlign: "center" }}>
                 {layanans.code != "SPORADIK" ? (
-                    <Text>Batu, {Helper.formatDate(Date())}</Text>
+                    <Text>
+                        {Helper.capitalizeFirstLetter(sistem?.kecamatan?.name)},{" "}
+                        {Helper.formatDate(Date())}
+                    </Text>
                 ) : (
                     <Text>Mengetahui : </Text>
                 )}
 
-                <Text>Kepala Kelurahan Ngaglik</Text>
-                <Text> Kota Batu</Text>
+                <Text>Kepala {sistem?.nama}</Text>
+                <Text> {Helper.capitalizeFirstLetter(sistem?.kota?.name)}</Text>
 
                 {layanans.is_sign == true ? (
                     <Image
@@ -127,9 +154,9 @@ export const Footer = ({ penduduk, isUser, isSaksi, saksi, isSign, id }) => {
                         fontFamily: "Bookman Old Style",
                     }}
                 >
-                    RENDRA ADINATA, S.Kom., M.AP.
+                    {lurah?.nama}
                 </Text>
-                <Text>NIP : 19870427 201101 1 09</Text>
+                <Text>NIP : {lurah?.nip}</Text>
             </Flex>
         );
     };

@@ -14,7 +14,7 @@ import {
     useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import signInImage from "assets/img/ImageArchitect1.png";
+import signInImage from "assets/img/ImageArchitect2.png";
 import axiosClient from "axios-client";
 import { useStateContext } from "context/ContextProvider";
 import { requestForToken } from "fcm";

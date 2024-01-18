@@ -30,6 +30,7 @@ function SKTMs() {
             .then(({ data }) => {
                 setLoading(false);
                 let datas = data.data.data;
+                console.log(datas);
                 setSKTMs([]);
                 if (datas) setSKTMs(datas);
             })
@@ -62,6 +63,10 @@ function SKTMs() {
             accessor: "nik",
         },
 
+        {
+            Header: "Nama",
+            accessor: "penduduk.fullname",
+        },
         {
             Header: "Keterangan",
             accessor: "keterangan",

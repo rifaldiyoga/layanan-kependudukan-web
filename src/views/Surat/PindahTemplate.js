@@ -25,6 +25,18 @@ const {
 const PindahTemplate = () => {
     let { id } = useParams();
     const [datas, setDatas] = useState(null);
+    const [sistem, setSistem] = useState([]);
+
+    const getSistem = () => {
+        axiosClient
+            .get("/v1/sistems/1")
+            .then(({ data }) => {
+                const penduduks = data.data;
+                console.log(data);
+                setSistem(penduduks);
+            })
+            .catch(() => {});
+    };
 
     const getDatas = () => {
         axiosClient
@@ -39,6 +51,7 @@ const PindahTemplate = () => {
 
     useEffect(() => {
         getDatas();
+        getSistem();
     }, []);
 
     console.log(datas);
@@ -66,8 +79,9 @@ const PindahTemplate = () => {
                 size={22}
             />
             <Text style={{ lineHeight: 1.5 }}>
-                Yang bertanda tangan dibawah ini, Lurah Ngaglik Kecamatan Batu
-                Pemerintah Kota Batu, menerangkan bahwa :
+                Yang bertanda tangan dibawah ini, Kepala {sistem?.nama}{" "}
+                Kecamatan {sistem?.kecamatan?.name} Pemerintah{" "}
+                {sistem?.kota?.name}, menerangkan bahwa :
             </Text>
             <table fontSize={14}>
                 <tbody>

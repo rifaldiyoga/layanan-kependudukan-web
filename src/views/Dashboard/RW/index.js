@@ -73,6 +73,7 @@ function RWs() {
                 loading={loading}
                 path="/rws"
                 onDelete={deleteRW}
+                isAdd={true}
             />
         </Flex>
     );

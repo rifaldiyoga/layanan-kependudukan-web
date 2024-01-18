@@ -1,7 +1,27 @@
 import { Box, Center, Divider, Flex, Image, Text } from "@chakra-ui/react";
 import signInImage from "assets/img/logo_kota_batu.png";
+import axiosClient from "axios-client";
+import Helper from "helper/Helper";
+import { useEffect, useState } from "react";
 
 export const Header = () => {
+    const [sistem, setSistem] = useState([]);
+
+    const getKecamatan = () => {
+        axiosClient
+            .get("/v1/sistems/1")
+            .then(({ data }) => {
+                const penduduks = data.data;
+                console.log(data);
+                setSistem(penduduks);
+            })
+            .catch(() => {});
+    };
+
+    useEffect(() => {
+        getKecamatan();
+    }, []);
+
     return (
         <Flex direction="column">
             <Flex direction="row" alignSelf="center">
@@ -17,25 +37,29 @@ export const Header = () => {
                                 fontSize={16}
                                 style={{ fontFamily: "Bookman Old Style" }}
                             >
-                                PEMERINTAH KOTA BATU
+                                PEMERINTAH {sistem?.kota?.name?.toUpperCase()}
                             </Text>
                             <Text
                                 fontWeight="bold"
                                 fontSize={16}
                                 style={{ fontFamily: "Bookman Old Style" }}
                             >
-                                KECAMATAN BATU
+                                KECAMATAN{" "}
+                                {sistem?.kecamatan?.name?.toUpperCase()}
                             </Text>
                             <Text
                                 fontWeight="bold"
                                 fontSize={24}
                                 style={{ fontFamily: "Bookman Old Style" }}
                             >
-                                KELURAHAN NGAGLIK
+                                {sistem?.nama?.toUpperCase()}
                             </Text>
                             <Text fontStyle="italic" fontSize={14}>
-                                Jln. Abdul Rachman No. 10, Telp (0341) 591441
-                                Batu Kode Pos 65311
+                                {sistem?.alamat}, Telp {sistem?.telp}{" "}
+                                {Helper.capitalizeFirstLetter(
+                                    sistem?.kecamatan?.name
+                                )}{" "}
+                                Kode Pos {sistem?.kode_pos}
                             </Text>
                         </Flex>
                     </Flex>

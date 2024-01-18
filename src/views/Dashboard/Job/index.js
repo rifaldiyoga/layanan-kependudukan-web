@@ -69,6 +69,7 @@ function Jobs() {
                 loading={loading}
                 path="/jobs"
                 onDelete={deleteJob}
+                isAdd={true}
             />
         </Flex>
     );

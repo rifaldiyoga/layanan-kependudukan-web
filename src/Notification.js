@@ -48,7 +48,7 @@ const Notification = () => {
         })
         .catch((err) => console.log("failed: ", err));
 
-    return <Toaster position="top-right" toastOptions={{ duration: 6000 }} />;
+    return <Toaster position="top-center" toastOptions={{ duration: 6000 }} />;
 };
 
 export default Notification;

@@ -38,7 +38,8 @@ function KeluargaForm() {
     const [loading, setLoading] = useState(false);
     const [districts, setDistricts] = useState([]);
     const [kelurahans, setKelurahan] = useState([]);
-    const [subdistricts, setKecamatan] = useState([]);
+    const [kecamatans, setKecamatan] = useState([]);
+    const [provinces, setProvinces] = useState([]);
     const [penduduks, setPenduduk] = useState([]);
     const [keluargas, setKeluarga] = useState([]);
     const [dataKeluraga, setDataKeluarga] = useState([]);
@@ -54,6 +55,7 @@ function KeluargaForm() {
             .then(({ data }) => {
                 const penduduks = data.data.data;
 
+                setRt([]);
                 setRt(penduduks);
             })
             .catch(() => {});
@@ -65,6 +67,7 @@ function KeluargaForm() {
             .then(({ data }) => {
                 const penduduks = data.data.data;
 
+                setRw([]);
                 setRw(penduduks);
             })
             .catch(() => {});
@@ -76,18 +79,47 @@ function KeluargaForm() {
             .then(({ data }) => {
                 const penduduks = data.data.data;
 
+                setKelurahan([]);
                 setKelurahan(penduduks);
             })
             .catch(() => {});
     };
 
-    const getKecamatan = () => {
+    const getKecamatan = (id) => {
+        let params = id
+            ? "/v1/subdistricts?district_id=" + id
+            : "/v1/subdistricts";
+
         axiosClient
-            .get("/v1/subdistricts")
+            .get(params)
             .then(({ data }) => {
                 const penduduks = data.data.data;
-                console.log(penduduks);
+                setKecamatan([]);
                 setKecamatan(penduduks);
+            })
+            .catch(() => {});
+    };
+
+    const getDistrict = (id) => {
+        let params = id ? "/v1/districts?province_id=" + id : "/v1/districts";
+        console.log(params);
+        axiosClient
+            .get(params)
+            .then(({ data }) => {
+                const penduduks = data.data.data;
+                setDistricts([]);
+                setDistricts(penduduks);
+            })
+            .catch(() => {});
+    };
+
+    const getProvince = () => {
+        axiosClient
+            .get("/v1/provinces")
+            .then(({ data }) => {
+                const penduduks = data.data.data;
+
+                setProvinces(penduduks);
             })
             .catch(() => {});
     };
@@ -107,7 +139,8 @@ function KeluargaForm() {
         getRt();
         getRw();
         getKelurahan();
-        getKecamatan();
+        getProvince();
+        // getKecamatan();
         getPenduduk();
     }, []);
 
@@ -225,8 +258,12 @@ function KeluargaForm() {
                                         "alamat",
                                         "kelurahan_id",
                                         "subdistrict_id",
+                                        "district_id",
+                                        "province_id",
                                         "nik_kepala_keluarga",
                                     ];
+                                    getDistrict(keluargas.province_id);
+                                    getKecamatan(keluargas.district_id);
                                     fields.forEach((field) => {
                                         setFieldValue(
                                             field,
@@ -357,6 +394,156 @@ function KeluargaForm() {
                                                             {errors.alamat}
                                                         </FormErrorMessage>
                                                     </FormControl>
+                                                    <FormControl
+                                                        isInvalid={
+                                                            errors.province_id
+                                                        }
+                                                        mb="16px"
+                                                    >
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="sm"
+                                                            fontWeight="normal"
+                                                        >
+                                                            Provinsi
+                                                        </FormLabel>
+                                                        <Field
+                                                            placeholder="Provinsi"
+                                                            name="province_id"
+                                                            onChange={(e) => {
+                                                                getDistrict(e);
+                                                            }}
+                                                            options={provinces.map(
+                                                                (data) => {
+                                                                    return {
+                                                                        value:
+                                                                            data.id,
+                                                                        label:
+                                                                            data.name,
+                                                                    };
+                                                                }
+                                                            )}
+                                                            component={
+                                                                SearchSelect
+                                                            }
+                                                        />
+
+                                                        <FormErrorMessage>
+                                                            {errors.province_id}
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                    <FormControl
+                                                        isInvalid={
+                                                            errors.district_id
+                                                        }
+                                                        mb="16px"
+                                                    >
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="sm"
+                                                            fontWeight="normal"
+                                                        >
+                                                            Kota
+                                                        </FormLabel>
+                                                        <Field
+                                                            placeholder="Kota"
+                                                            name="district_id"
+                                                            onChange={(e) => {
+                                                                getKecamatan(e);
+                                                            }}
+                                                            options={districts.map(
+                                                                (data) => {
+                                                                    return {
+                                                                        value:
+                                                                            data.id,
+                                                                        label:
+                                                                            data.name,
+                                                                    };
+                                                                }
+                                                            )}
+                                                            component={
+                                                                SearchSelect
+                                                            }
+                                                        />
+
+                                                        <FormErrorMessage>
+                                                            {errors.district_id}
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                    <FormControl
+                                                        isInvalid={
+                                                            errors.subdistrict_id
+                                                        }
+                                                        mb="16px"
+                                                    >
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="sm"
+                                                            fontWeight="normal"
+                                                        >
+                                                            Kecamatan
+                                                        </FormLabel>
+                                                        <Field
+                                                            placeholder="Kecamatan"
+                                                            name="subdistrict_id"
+                                                            options={kecamatans.map(
+                                                                (data) => {
+                                                                    return {
+                                                                        value:
+                                                                            data.id,
+                                                                        label:
+                                                                            data.name,
+                                                                    };
+                                                                }
+                                                            )}
+                                                            component={
+                                                                SearchSelect
+                                                            }
+                                                        />
+
+                                                        <FormErrorMessage>
+                                                            {
+                                                                errors.subdistrict_id
+                                                            }
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                    <FormControl
+                                                        isInvalid={
+                                                            errors.kelurahan_id
+                                                        }
+                                                        mb="16px"
+                                                    >
+                                                        <FormLabel
+                                                            ms="4px"
+                                                            fontSize="sm"
+                                                            fontWeight="normal"
+                                                        >
+                                                            Kelurahan
+                                                        </FormLabel>
+                                                        <Field
+                                                            placeholder="Kelurahan"
+                                                            name="kelurahan_id"
+                                                            options={kelurahans.map(
+                                                                (data) => {
+                                                                    return {
+                                                                        value:
+                                                                            data.id,
+                                                                        label:
+                                                                            data.name,
+                                                                    };
+                                                                }
+                                                            )}
+                                                            component={
+                                                                SearchSelect
+                                                            }
+                                                        />
+
+                                                        <FormErrorMessage>
+                                                            {
+                                                                errors.kelurahan_id
+                                                            }
+                                                        </FormErrorMessage>
+                                                    </FormControl>
 
                                                     <HStack
                                                         spacing="16px"
@@ -376,6 +563,7 @@ function KeluargaForm() {
                                                             </FormLabel>
                                                             <Field
                                                                 name="rw_id"
+                                                                placeholder="RW"
                                                                 options={rws.map(
                                                                     (data) => {
                                                                         return {
@@ -408,6 +596,7 @@ function KeluargaForm() {
                                                                 RT
                                                             </FormLabel>
                                                             <Field
+                                                                placeholder="RT"
                                                                 name="rt_id"
                                                                 options={rts.map(
                                                                     (data) => {
@@ -429,80 +618,6 @@ function KeluargaForm() {
                                                             </FormErrorMessage>
                                                         </FormControl>
                                                     </HStack>
-
-                                                    <FormControl
-                                                        isInvalid={
-                                                            errors.kelurahan_id
-                                                        }
-                                                        mb="16px"
-                                                    >
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="sm"
-                                                            fontWeight="normal"
-                                                        >
-                                                            Kelurahan
-                                                        </FormLabel>
-                                                        <Field
-                                                            name="kelurahan_id"
-                                                            options={kelurahans.map(
-                                                                (data) => {
-                                                                    return {
-                                                                        value:
-                                                                            data.id,
-                                                                        label:
-                                                                            data.name,
-                                                                    };
-                                                                }
-                                                            )}
-                                                            component={
-                                                                SearchSelect
-                                                            }
-                                                        />
-
-                                                        <FormErrorMessage>
-                                                            {
-                                                                errors.kelurahan_id
-                                                            }
-                                                        </FormErrorMessage>
-                                                    </FormControl>
-
-                                                    <FormControl
-                                                        isInvalid={
-                                                            errors.subdistrict_id
-                                                        }
-                                                        mb="16px"
-                                                    >
-                                                        <FormLabel
-                                                            ms="4px"
-                                                            fontSize="sm"
-                                                            fontWeight="normal"
-                                                        >
-                                                            Kecamatan
-                                                        </FormLabel>
-                                                        <Field
-                                                            name="subdistrict_id"
-                                                            options={subdistricts.map(
-                                                                (data) => {
-                                                                    return {
-                                                                        value:
-                                                                            data.id,
-                                                                        label:
-                                                                            data.name,
-                                                                    };
-                                                                }
-                                                            )}
-                                                            component={
-                                                                SearchSelect
-                                                            }
-                                                        />
-
-                                                        <FormErrorMessage>
-                                                            {
-                                                                errors.subdistrict_id
-                                                            }
-                                                        </FormErrorMessage>
-                                                    </FormControl>
                                                 </Flex>
                                                 <Flex flex="1" />
                                             </TabPanel>

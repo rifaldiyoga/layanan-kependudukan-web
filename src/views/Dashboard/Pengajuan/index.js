@@ -4,6 +4,7 @@ import axiosClient from "axios-client";
 import { useEffect, useState } from "react";
 import { DateObject } from "react-multi-date-picker";
 import ListView from "../../../components/Layout/ListView";
+import { onMessageListener } from "fcm";
 
 function Pengajuans() {
     const [pengajuans, setPengajuans] = useState([]);
@@ -106,6 +107,12 @@ function Pengajuans() {
             </Button>
         );
     };
+
+    // onMessageListener()
+    //     .then((payload) => {
+    //         getDatas(filter);
+    //     })
+    //     .catch((err) => console.log("failed: ", err));
 
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>

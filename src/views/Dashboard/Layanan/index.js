@@ -82,6 +82,7 @@ function Layanans() {
                 loading={loading}
                 path="/layanans"
                 onDelete={deleteLayanan}
+                isAdd={true}
             />
         </Flex>
     );

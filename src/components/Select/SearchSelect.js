@@ -38,7 +38,10 @@ export default function SearchSelect({ field, form, ...props }) {
                       )
                     : ""
             }
-            onChange={(option) => form.setFieldValue(field.name, option.value)}
+            onChange={(option) => {
+                form.setFieldValue(field.name, option.value);
+                if (props.onChange) props.onChange(option.value);
+            }}
         />
     );
 }

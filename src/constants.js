@@ -1,5 +1,10 @@
-export const BASE_URL = "http://localhost:8080/api";
-export const BASE_IMAGE_URL = "http://localhost:8080/";
+export const BASE_URL =
+    "https://layanan-kependudukan-345245fcf467.herokuapp.com/api";
+export const BASE_IMAGE_URL =
+    "https://layanan-kependudukan-345245fcf467.herokuapp.com/";
+
+// export const BASE_URL = "http://localhost:8080/api";
+// export const BASE_IMAGE_URL = "http://localhost:8080/";
 
 export const statusNikah = [
     {

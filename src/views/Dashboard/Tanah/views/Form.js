@@ -13,6 +13,7 @@ import {
 import axiosClient from "axios-client";
 import Card from "components/Card/Card.js";
 import { DocumentIcon } from "components/Icons/Icons";
+import { TanahDetail } from "components/Pengajuans/TanahDetail";
 import { BASE_IMAGE_URL } from "constants";
 import { statusNikah } from "constants";
 import Helper from "helper/Helper";
@@ -167,7 +168,6 @@ function TanahForm() {
                             </Tr>
                         </Tbody>
                     </Table> */}
-                    <Text fontWeight={"bold"}>Detail Pengajuan</Text>
                     <Table p="0px" mt="16px">
                         <Tbody>
                             <Tr>
@@ -179,20 +179,6 @@ function TanahForm() {
                                 <Td>Keterangan</Td>
                                 <Td> : </Td>
                                 <Td>{tanahs.keterangan}</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>Lampiran</Td>
-                                <Td> : </Td>
-                                <Td>
-                                    <Link
-                                        href={BASE_IMAGE_URL + tanahs.lampiran}
-                                        isExternal
-                                        color={"blue"}
-                                    >
-                                        Dokumen Lampiran{" "}
-                                        <DocumentIcon mx="2px" />
-                                    </Link>
-                                </Td>
                             </Tr>
                         </Tbody>
                     </Table>
@@ -294,6 +280,10 @@ function TanahForm() {
                             </Td>
                         </Tr>
                     </Table>
+                    <Text fontSize="l" fontWeight="bold" flex="1" mt="16px">
+                        Detail Pengajuan
+                    </Text>
+                    <TanahDetail pengajuans={id} />
                 </Flex>
             </Card>
         </Flex>

@@ -69,7 +69,7 @@ function UserForm() {
 
     function createUser(fields, setSubmitting) {
         axiosClient
-            .post("/v1/users", fields)
+            .post("/v1/users/admin", fields)
             .then((response) => {
                 if (response.status == 200) {
                     console.log(response);

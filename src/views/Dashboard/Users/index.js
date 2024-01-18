@@ -72,6 +72,7 @@ function Users() {
                 loading={loading}
                 path="/users"
                 onDelete={deleteUsers}
+                isAdd={true}
             />
         </Flex>
     );

@@ -25,6 +25,29 @@ const {
 const KeramaianTemplate = () => {
     let { id } = useParams();
     const [datas, setDatas] = useState(null);
+    const [lurah, setLurah] = useState(null);
+    const [sistem, setSistem] = useState([]);
+
+    const getSistem = () => {
+        axiosClient
+            .get("/v1/sistems/1")
+            .then(({ data }) => {
+                const penduduks = data.data;
+                console.log(data);
+                setSistem(penduduks);
+            })
+            .catch(() => {});
+    };
+
+    const getLurah = () => {
+        axiosClient
+            .get("/v1/aparatur_desas/lurah")
+            .then(({ data }) => {
+                console.log(data);
+                setLurah(data.data);
+            })
+            .catch(() => {});
+    };
 
     const getDatas = () => {
         axiosClient
@@ -39,6 +62,8 @@ const KeramaianTemplate = () => {
 
     useEffect(() => {
         getDatas();
+        getLurah();
+        getSistem();
     }, []);
 
     if (datas) console.log(datas.penduduk);
@@ -69,23 +94,20 @@ const KeramaianTemplate = () => {
                     <tr p={8}>
                         <td>NAMA</td>
                         <td>:</td>
-                        <td style={{ fontWeight: "bold" }}>
-                            {" "}
-                            RENDRA ADINATA,S.Kom.,M.AP.
-                        </td>
+                        <td style={{ fontWeight: "bold" }}> {lurah?.nama}</td>
                     </tr>
 
                     <tr>
                         <td>NIP</td>
                         <td>:</td>
-                        <td>19870427 201101 1 009</td>
+                        <td>{lurah?.nip}</td>
                     </tr>
                     <tr>
                         <td>JABATAN</td>
                         <td>:</td>
                         <td>
                             Ketua Satuan Tugas Pencegahan dan Pengendalian
-                            Covid-19 Kel. Ngaglik
+                            Covid-19 {sistem?.nama}
                         </td>
                     </tr>
                 </tbody>
@@ -98,15 +120,15 @@ const KeramaianTemplate = () => {
             <Text textAlign="justify" style={{ lineHeight: 2 }}>
                 <ol>
                     <li>
-                        Peraturan Wali Kota Batu No. 78 Tahun 2020 tentang
-                        Penerapan Disiplin dan Pengakan Hukum Penerapan Protokol
-                        Keshatan Sebagai Upaya Pencegahan dan Pengendalian{" "}
-                        <b>CORONA VIRUS DISEASE 2019.</b>
+                        Peraturan Wali {sistem?.kota?.name} No. 78 Tahun 2020
+                        tentang Penerapan Disiplin dan Pengakan Hukum Penerapan
+                        Protokol Keshatan Sebagai Upaya Pencegahan dan
+                        Pengendalian <b>CORONA VIRUS DISEASE 2019.</b>
                     </li>
                     <li>
-                        Surat Keputusan Wali Kota Batu No. 79 tahun 2020 tentang
-                        Pedoman Adaptasi Kebiasaan, dengan ini kami berikan{" "}
-                        <b>REKOMENDASI</b> kepada :
+                        Surat Keputusan Wali {sistem?.kota?.name} No. 79 tahun
+                        2020 tentang Pedoman Adaptasi Kebiasaan, dengan ini kami
+                        berikan <b>REKOMENDASI</b> kepada :
                         <table fontSize={14}>
                             <tbody>
                                 <tr p={8}>
@@ -224,14 +246,15 @@ const KeramaianTemplate = () => {
                     <li>
                         Apabila ditemukan undangan yang tidak sehat atau
                         mengalami gejala seperti demam 37,3 derajat Celcius,
-                        batuk/pilek dan kesulitan bernafas agar segera
-                        melaporkan kepada Satgas Penanganan Covid 19 Kelurahan
-                        Ngaglik Kecamatan Batu Kta Batu.
+                        {sistem?.kecamatan?.name} pilek dan kesulitan bernafas
+                        agar segera melaporkan kepada Satgas Penanganan Covid 19
+                        {sistem?.nama} Kecamatan {sistem?.kecamatan?.name} Kta{" "}
+                        {sistem?.kecamatan?.name} .
                     </li>
                     <li>
                         Apabila dari point 1-8 dimaksud di atas tidak mematuhi
                         atau tidak melaksanakan syarat ketentuan yang berlaku,
-                        maka Satgas Penangan Covid-19 Kelurahan Ngaglik berhak
+                        maka Satgas Penangan Covid-19 {sistem?.nama} berhak
                         memberhentikan pelaksanaan acara tersebut.
                     </li>
                     <li>

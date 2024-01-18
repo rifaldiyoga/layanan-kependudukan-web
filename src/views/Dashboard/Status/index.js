@@ -69,6 +69,7 @@ function Status() {
                 loading={loading}
                 path="/status"
                 onDelete={deleteReligion}
+                isAdd={true}
             />
         </Flex>
     );

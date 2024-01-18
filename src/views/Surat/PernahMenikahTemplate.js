@@ -25,6 +25,18 @@ const {
 const PernahMenikahTemplate = () => {
     let { id } = useParams();
     const [datas, setDatas] = useState(null);
+    const [sistem, setSistem] = useState([]);
+
+    const getSistem = () => {
+        axiosClient
+            .get("/v1/sistems/1")
+            .then(({ data }) => {
+                const penduduks = data.data;
+                console.log(data);
+                setSistem(penduduks);
+            })
+            .catch(() => {});
+    };
 
     const getDatas = () => {
         axiosClient
@@ -39,6 +51,7 @@ const PernahMenikahTemplate = () => {
 
     useEffect(() => {
         getDatas();
+        getSistem();
     }, []);
 
     console.log(datas);
@@ -61,8 +74,9 @@ const PernahMenikahTemplate = () => {
                 size={22}
             />
             <Text style={{ lineHeight: 1.5 }}>
-                Yang bertanda tangan dibawah ini, Lurah Ngaglik Kecamatan Batu
-                Pemerintah Kota Batu, menerangkan bahwa :
+                Yang bertanda tangan dibawah ini, Kepala {sistem?.nama}{" "}
+                Kecamatan {sistem?.kecamatan?.name} Pemerintah{" "}
+                {sistem?.kota?.name}, menerangkan bahwa :
             </Text>
             <Text>1. Suami</Text>
             <table fontSize={14}>
@@ -202,7 +216,8 @@ const PernahMenikahTemplate = () => {
 
             <Text textAlign="justify" style={{ lineHeight: 2 }}>
                 Ke dua nama di atas adalah benar-benar penduduk Kelurahan
-                Ngaglik Kecamatan Batu Kota Batu.
+                Ngaglik Kecamatan {sistem?.kecamatan?.name} {sistem?.kota?.name}
+                .
                 <ol>
                     <li>
                         Menerangkan bahwa berdasarkan pengantar dari ketua RT{" "}

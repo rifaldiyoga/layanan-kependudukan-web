@@ -32,6 +32,7 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import BillingInformation from "views/Dashboard/Billing/components/BillingInformation";
 import Transactions from "views/Dashboard/Billing/components/Transactions";
+import SearchSelect from "components/Select/SearchSelect";
 
 function RTForm() {
     const history = useHistory();
@@ -46,6 +47,7 @@ function RTForm() {
         axiosClient
             .get("/v1/rws")
             .then(({ data }) => {
+                console.log(data.data.data);
                 setLoading(false);
                 setRWs(data.data.data);
             })
@@ -162,9 +164,9 @@ function RTForm() {
                                 .get("/v1/rts/" + id)
                                 .then(({ data }) => {
                                     const rts = data.data;
-
+                                    console.log(rts);
                                     setLoading(false);
-                                    const fields = ["code", "name"];
+                                    const fields = ["code", "name", "rw_id"];
                                     fields.forEach((field) => {
                                         setFieldValue(field, rts[field], false);
                                     });
@@ -240,8 +242,18 @@ function RTForm() {
                                                 RW
                                             </FormLabel>
                                             <Field
+                                                placeholder="RW"
                                                 name="rw_id"
-                                                component={Selects}
+                                                options={rws.map((data) => {
+                                                    return {
+                                                        value: data.id,
+                                                        label:
+                                                            data.name +
+                                                            " - " +
+                                                            data.kelurahan.name,
+                                                    };
+                                                })}
+                                                component={SearchSelect}
                                             />
 
                                             <FormErrorMessage>

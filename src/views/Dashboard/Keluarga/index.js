@@ -69,6 +69,7 @@ function Keluargas() {
                 loading={loading}
                 path="/keluargas"
                 onDelete={deleteKeluarga}
+                isAdd={true}
             />
         </Flex>
     );

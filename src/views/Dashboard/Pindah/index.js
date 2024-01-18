@@ -68,6 +68,10 @@ function Pindahs() {
         },
 
         {
+            Header: "Nama",
+            accessor: "penduduk.fullname",
+        },
+        {
             Header: "Keterangan",
             accessor: "alasan_pindah",
         },

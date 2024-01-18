@@ -446,16 +446,15 @@ function SearchTable1(props) {
                                 color="gray.400"
                             />
                         </Button>
-                        {pageCount > 8 ? (
+                        {pageCount > 10 ? (
                             <NumberInput
-                                max={pageCount - 1}
+                                max={tableData.length}
                                 min={1}
                                 w="75px"
                                 mx="6px"
-                                isDisabled={true}
                                 defaultValue="1"
                                 value={pageIndex + 1}
-                                onChange={(e) => gotoPage(e)}
+                                onChange={(e) => gotoPage(e - 1)}
                             >
                                 <NumberInputField />
                                 <NumberInputStepper>
@@ -571,7 +570,9 @@ function SearchTable1(props) {
                         data = {
                             ...data,
                             start_date: values.periode[0].format("YYYY-MM-DD"),
-                            end_date: values.periode[1].format("YYYY-MM-DD"),
+                            end_date: values.periode[1].format(
+                                "YYYY-MM-DD HH:mm:ss"
+                            ),
                         };
                     }
 

@@ -74,6 +74,7 @@ function Kelurahans() {
                 loading={loading}
                 path="/kelurahans"
                 onDelete={deleteKelurahan}
+                isAdd={true}
             />
         </Flex>
     );

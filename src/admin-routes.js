@@ -24,6 +24,11 @@ import Kematian from "views/Dashboard/Kematian";
 import KematianForm from "views/Dashboard/Kematian/views/Form";
 import Layanan from "views/Dashboard/Layanan";
 import LayananForm from "views/Dashboard/Layanan/views/Form";
+
+import AparaturDesa from "views/Dashboard/AparaturDesa";
+import AparaturDesaForm from "views/Dashboard/AparaturDesa/views/Form";
+import Jabatan from "views/Dashboard/Jabatan";
+import JabatanForm from "views/Dashboard/Jabatan/views/Form";
 import Penduduk from "views/Dashboard/Penduduk";
 import PendudukForm from "views/Dashboard/Penduduk/views/Form";
 import Pengajuan from "views/Dashboard/Pengajuan";
@@ -64,6 +69,7 @@ import SubDistrict from "views/Dashboard/SubDistrict";
 import SubDistrictForm from "views/Dashboard/SubDistrict/views/Form";
 import Users from "views/Dashboard/Users";
 import UserForm from "views/Dashboard/Users/views/Form";
+import Sistem from "views/Dashboard/Sistem";
 
 import { Icon } from "@chakra-ui/react";
 import { HomeIcon, StatsIcon } from "components/Icons/Icons";
@@ -87,7 +93,9 @@ import {
 } from "react-icons/fa";
 import { RiArticleFill, RiServiceFill } from "react-icons/ri";
 import { SiWorkplace } from "react-icons/si";
-import { IoEnter, IoExit } from "react-icons/io5";
+import { IoEnter, IoExit, IoPrint } from "react-icons/io5";
+import Laporans from "views/Dashboard/Laporan";
+import { GrPrint } from "react-icons/gr";
 
 var dashRoutes = [
     {
@@ -533,6 +541,46 @@ var dashRoutes = [
                 ],
             },
             {
+                path: "/aparatur_desas",
+                name: "Aparatur Desa",
+                rtlName: "لوحة القيادة",
+                icon: <FaMosque color="inherit" />,
+                component: AparaturDesa,
+                layout: "/admin",
+                views: [
+                    {
+                        path: "/new",
+                        component: AparaturDesaForm,
+                        key: "new",
+                    },
+                    {
+                        path: "/:id",
+                        component: AparaturDesaForm,
+                        key: "edit",
+                    },
+                ],
+            },
+            {
+                path: "/positions",
+                name: "Jabatan",
+                rtlName: "لوحة القيادة",
+                icon: <FaMosque color="inherit" />,
+                component: Jabatan,
+                layout: "/admin",
+                views: [
+                    {
+                        path: "/new",
+                        component: JabatanForm,
+                        key: "new",
+                    },
+                    {
+                        path: "/:id",
+                        component: JabatanForm,
+                        key: "edit",
+                    },
+                ],
+            },
+            {
                 path: "/articles",
                 name: "Artikel",
                 rtlName: "لوحة القيادة",
@@ -632,6 +680,7 @@ var dashRoutes = [
                     },
                 ],
             },
+
             {
                 path: "/provinces",
                 name: "Provinsi",
@@ -773,6 +822,22 @@ var dashRoutes = [
                 key: "edit",
             },
         ],
+    },
+    {
+        path: "/sistems",
+        name: "Sistem",
+        rtlName: "لوحة القيادة",
+        icon: <Icon as={FaUser} />,
+        component: Sistem,
+        layout: "/admin",
+    },
+    {
+        path: "/laporans",
+        name: "Laporan",
+        rtlName: "لوحة القيادة",
+        icon: <Icon as={IoPrint} />,
+        component: Laporans,
+        layout: "/admin",
     },
 ];
 export default dashRoutes;

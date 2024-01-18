@@ -13,6 +13,7 @@ import {
 import axiosClient from "axios-client";
 import Card from "components/Card/Card.js";
 import { DocumentIcon } from "components/Icons/Icons";
+import { BerpergianDetail } from "components/Pengajuans/BerpergianDetail";
 import { BASE_IMAGE_URL } from "constants";
 import { statusNikah } from "constants";
 import Helper from "helper/Helper";
@@ -167,7 +168,7 @@ function BerpergianForm() {
                             </Tr>
                         </Tbody>
                     </Table> */}
-                    <Text fontWeight={"bold"}>Detail Pengajuan</Text>
+
                     <Table p="0px" mt="16px">
                         <Tbody>
                             <Tr>
@@ -179,23 +180,6 @@ function BerpergianForm() {
                                 <Td>Keterangan</Td>
                                 <Td> : </Td>
                                 <Td>{berpergians.keterangan}</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>Lampiran</Td>
-                                <Td> : </Td>
-                                <Td>
-                                    <Link
-                                        href={
-                                            BASE_IMAGE_URL +
-                                            berpergians.lampiran
-                                        }
-                                        isExternal
-                                        color={"blue"}
-                                    >
-                                        Dokumen Lampiran{" "}
-                                        <DocumentIcon mx="2px" />
-                                    </Link>
-                                </Td>
                             </Tr>
                         </Tbody>
                     </Table>
@@ -298,6 +282,10 @@ function BerpergianForm() {
                             </Td>
                         </Tr>
                     </Table>
+                    <Text fontSize="l" fontWeight="bold" flex="1" mt="16px">
+                        Detail Pengajuan
+                    </Text>
+                    <BerpergianDetail pengajuans={id} />
                 </Flex>
             </Card>
         </Flex>

@@ -63,6 +63,10 @@ function Rumahs() {
         },
 
         {
+            Header: "Nama",
+            accessor: "penduduk.fullname",
+        },
+        {
             Header: "Keterangan",
             accessor: "keterangan",
         },

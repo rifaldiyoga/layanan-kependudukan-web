@@ -195,6 +195,7 @@ function LayananForm() {
                                         "code",
                                         "name",
                                         "type",
+                                        "kode_surat",
                                         "is_confirm",
                                         "is_sign",
                                         "info",
@@ -264,6 +265,27 @@ function LayananForm() {
 
                                             <FormErrorMessage>
                                                 {errors.name}
+                                            </FormErrorMessage>
+                                        </FormControl>
+                                        <FormControl
+                                            isInvalid={errors.kode_surat}
+                                            mb="16px"
+                                        >
+                                            <FormLabel
+                                                ms="4px"
+                                                fontSize="sm"
+                                                fontWeight="normal"
+                                            >
+                                                Kode Surat
+                                            </FormLabel>
+                                            <Field
+                                                placeholder="Kode Surat"
+                                                name="kode_surat"
+                                                component={Inputs}
+                                            />
+
+                                            <FormErrorMessage>
+                                                {errors.kode_surat}
                                             </FormErrorMessage>
                                         </FormControl>
                                         <FormControl

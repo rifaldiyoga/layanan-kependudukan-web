@@ -72,6 +72,7 @@ function Districts() {
                 loading={loading}
                 path="/districts"
                 onDelete={deleteDistrict}
+                isAdd={true}
             />
         </Flex>
     );

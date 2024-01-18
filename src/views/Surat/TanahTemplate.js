@@ -26,6 +26,18 @@ const TanahTemplate = () => {
     let { id } = useParams();
     const [datas, setDatas] = useState(null);
     const [saksis, setSaksi] = useState([]);
+    const [sistem, setSistem] = useState([]);
+
+    const getSistem = () => {
+        axiosClient
+            .get("/v1/sistems/1")
+            .then(({ data }) => {
+                const penduduks = data.data;
+                console.log(data);
+                setSistem(penduduks);
+            })
+            .catch(() => {});
+    };
 
     const getDatas = () => {
         axiosClient
@@ -38,6 +50,7 @@ const TanahTemplate = () => {
 
     useEffect(() => {
         getDatas();
+        getSistem();
     }, []);
 
     console.log(datas);
@@ -65,10 +78,12 @@ const TanahTemplate = () => {
                 size={datas.type != "Sporadik" ? 22 : 16}
             />
             <Text style={{ lineHeight: 1.5 }}>
-                Yang bertanda tangan dibawah ini, Lurah Ngaglik Kecamatan Batu
-                Pemerintah Kota Batu, menerangkan bahwa berdasarkan Surat
-                Pernyataan yang dibuat pada tanggal {Helper.formatDate(Date())}{" "}
-                oleh :
+                Yang bertanda tangan dibawah ini, Kepala {sistem?.nama}{" "}
+                Kecamatan{" "}
+                {Helper.capitalizeFirstLetter(sistem?.kecamatan?.name)}{" "}
+                Pemerintah {Helper.capitalizeFirstLetter(sistem?.kota?.name)},
+                menerangkan bahwa berdasarkan Surat Pernyataan yang dibuat pada
+                tanggal {Helper.formatDate(Date())} oleh :
             </Text>
             <table fontSize={14}>
                 <tbody>

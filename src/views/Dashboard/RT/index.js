@@ -53,6 +53,10 @@ function RTs() {
             Header: "RW",
             accessor: "rw.name",
         },
+        {
+            Header: "Kelurahan",
+            accessor: "rw.kelurahan.name",
+        },
 
         {
             Header: "Tgl Dibuat",
@@ -73,6 +77,7 @@ function RTs() {
                 loading={loading}
                 path="/rts"
                 onDelete={deleteRT}
+                isAdd={true}
             />
         </Flex>
     );

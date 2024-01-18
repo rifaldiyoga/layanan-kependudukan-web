@@ -69,6 +69,7 @@ function Educations() {
                 loading={loading}
                 path="/educations"
                 onDelete={deleteEducation}
+                isAdd={true}
             />
         </Flex>
     );

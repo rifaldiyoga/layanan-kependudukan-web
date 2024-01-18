@@ -30,6 +30,8 @@ const ListView = ({
     initialValues,
     actionType,
     status,
+    isAdd,
+    isPrint,
 }) => {
     const [list, setData] = useState([]);
 
@@ -55,16 +57,38 @@ const ListView = ({
                     {title}
                 </Text>
                 <Spacer />
-                <Link to={"/admin" + path + "/new"}>
-                    <Button
-                        bg={bgButton}
-                        color="white"
-                        fontSize="xs"
-                        variant="no-hover"
+                {isAdd && (
+                    <Link to={"/admin" + path + "/new"}>
+                        <Button
+                            bg={bgButton}
+                            color="white"
+                            fontSize="xs"
+                            variant="no-hover"
+                        >
+                            ADD NEW
+                        </Button>
+                    </Link>
+                )}
+                {isPrint && (
+                    <Link
+                        to={
+                            "/surat/laporan?start_date=" +
+                            initialValues.start_date +
+                            "&end_date=" +
+                            initialValues.end_date
+                        }
+                        target="_blank"
                     >
-                        ADD NEW
-                    </Button>
-                </Link>
+                        <Button
+                            bg={bgButton}
+                            color="white"
+                            fontSize="xs"
+                            variant="no-hover"
+                        >
+                            Lihat Laporan
+                        </Button>
+                    </Link>
+                )}
             </Flex>
             <CardBody>
                 <SearchTable1
@@ -76,6 +100,7 @@ const ListView = ({
                     actionType={actionType}
                     initialValues={initialValues}
                     status={status}
+                    isAdd={isAdd}
                 />
             </CardBody>
         </Card>

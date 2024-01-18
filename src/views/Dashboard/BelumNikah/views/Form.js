@@ -13,6 +13,7 @@ import {
 import axiosClient from "axios-client";
 import Card from "components/Card/Card.js";
 import { DocumentIcon } from "components/Icons/Icons";
+import { BelumMenikahDetail } from "components/Pengajuans/BelumMenikahDetail";
 import { BASE_IMAGE_URL } from "constants";
 import { statusNikah } from "constants";
 import Helper from "helper/Helper";
@@ -139,7 +140,7 @@ function BelumMenikahForm() {
             <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
                 <Flex p="16px">
                     <Text fontSize="xl" fontWeight="bold" flex="1">
-                        Detail BelumMenikah
+                        Detail Belum Menikah
                     </Text>
                     <NavLink to={"/surat/belum_menikahs/" + id} target="_blank">
                         <Button
@@ -169,8 +170,7 @@ function BelumMenikahForm() {
                             </Tr>
                         </Tbody>
                     </Table> */}
-                    <Text fontWeight={"bold"}>Detail Pengajuan</Text>
-                    <Table p="0px" mt="16px">
+                    <Table p="0px">
                         <Tbody>
                             <Tr>
                                 <Td w="15%">Kode Surat</Td>
@@ -181,23 +181,6 @@ function BelumMenikahForm() {
                                 <Td>Keterangan</Td>
                                 <Td> : </Td>
                                 <Td>{belum_menikahs.keterangan}</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>Lampiran</Td>
-                                <Td> : </Td>
-                                <Td>
-                                    <Link
-                                        href={
-                                            BASE_IMAGE_URL +
-                                            belum_menikahs.lampiran
-                                        }
-                                        isExternal
-                                        color={"blue"}
-                                    >
-                                        Dokumen Lampiran{" "}
-                                        <DocumentIcon mx="2px" />
-                                    </Link>
-                                </Td>
                             </Tr>
                         </Tbody>
                     </Table>
@@ -302,6 +285,10 @@ function BelumMenikahForm() {
                             </Td>
                         </Tr>
                     </Table>
+                    <Text fontSize="l" fontWeight="bold" flex="1" mt="16px">
+                        Detail Pengajuan
+                    </Text>
+                    <BelumMenikahDetail pengajuans={id} />
                 </Flex>
             </Card>
         </Flex>

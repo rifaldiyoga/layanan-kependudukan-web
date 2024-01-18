@@ -13,6 +13,10 @@ const status = {
         text: "Disetujui",
         color: "green",
     },
+    REJECTED: {
+        text: "Ditolak",
+        color: "red",
+    },
 };
 
 function StatusBadge(props) {

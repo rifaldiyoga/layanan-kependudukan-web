@@ -13,6 +13,7 @@ import {
 import axiosClient from "axios-client";
 import Card from "components/Card/Card.js";
 import { DocumentIcon } from "components/Icons/Icons";
+import { JandaDetail } from "components/Pengajuans/JandaDetail";
 import { BASE_IMAGE_URL } from "constants";
 import { statusNikah } from "constants";
 import Helper from "helper/Helper";
@@ -167,8 +168,7 @@ function JandaForm() {
                             </Tr>
                         </Tbody>
                     </Table> */}
-                    <Text fontWeight={"bold"}>Detail Pengajuan</Text>
-                    <Table p="0px" mt="16px">
+                    <Table p="0px">
                         <Tbody>
                             <Tr>
                                 <Td w="15%">Kode Surat</Td>
@@ -179,20 +179,6 @@ function JandaForm() {
                                 <Td>Keterangan</Td>
                                 <Td> : </Td>
                                 <Td>{jandas.keterangan}</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>Lampiran</Td>
-                                <Td> : </Td>
-                                <Td>
-                                    <Link
-                                        href={BASE_IMAGE_URL + jandas.lampiran}
-                                        isExternal
-                                        color={"blue"}
-                                    >
-                                        Dokumen Lampiran{" "}
-                                        <DocumentIcon mx="2px" />
-                                    </Link>
-                                </Td>
                             </Tr>
                         </Tbody>
                     </Table>
@@ -294,6 +280,10 @@ function JandaForm() {
                             </Td>
                         </Tr>
                     </Table>
+                    <Text fontSize="l" fontWeight="bold" flex="1" mt="16px">
+                        Detail Pengajuan
+                    </Text>
+                    <JandaDetail pengajuans={id} />
                 </Flex>
             </Card>
         </Flex>

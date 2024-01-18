@@ -7,6 +7,7 @@ import KelahiranTemplate from "views/Surat/KelahiranTemplate";
 import KematianTemplate from "views/Surat/KematianTemplate";
 import KepolisianTemplate from "views/Surat/KepolisianTemplate";
 import KeramaianTemplate from "views/Surat/KeramaianTemplate";
+import LaporanTemplate from "views/Surat/LaporanTemplate";
 import PenghasilanTemplate from "views/Surat/PenghasilanTemplate";
 import PernahMenikahTemplate from "views/Surat/PernahMenikahTemplate";
 import PindahTemplate from "views/Surat/PindahTemplate";
@@ -119,6 +120,13 @@ var dashRoutes = [
         name: "Pindah",
         rtlName: "لوحة القيادة",
         component: KematianTemplate,
+        layout: "/surat",
+    },
+    {
+        path: "/laporan",
+        name: "Laporan",
+        rtlName: "لوحة القيادة",
+        component: LaporanTemplate,
         layout: "/surat",
     },
 ];

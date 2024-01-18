@@ -1,8 +1,18 @@
 import {
+    AbsoluteCenter,
     Button,
     Center,
     Flex,
+    FormControl,
+    FormLabel,
     Input,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     Select,
     Tab,
     TabList,
@@ -16,12 +26,28 @@ import {
     Th,
     Thead,
     Tr,
+    useDisclosure,
 } from "@chakra-ui/react";
 import axiosClient from "axios-client";
 import StatusBadge from "components/Badge/StatusBadge";
 import Card from "components/Card/Card.js";
-import { useEffect, useState } from "react";
+import { BelumMenikahDetail } from "components/Pengajuans/BelumMenikahDetail";
+import { BerpergianDetail } from "components/Pengajuans/BerpergianDetail";
+import { DomisiliDetail } from "components/Pengajuans/DomisiliDetail";
+import { JandaDetail } from "components/Pengajuans/JandaDetail";
+import { KelahiranDetail } from "components/Pengajuans/KelahiranDetail";
+import { KematianDetail } from "components/Pengajuans/KematianDetail";
+import { KepolisianDetail } from "components/Pengajuans/KepolisianDetail";
+import { KeramaianDetail } from "components/Pengajuans/KeramaianDetail";
+import { PenghasilanDetail } from "components/Pengajuans/PenghasilanDetail";
+import { PernahNikahDetail } from "components/Pengajuans/PernahNikahDetail";
+import { PindahDetail } from "components/Pengajuans/PindahDetail";
+import { RumahDetail } from "components/Pengajuans/RumahDetail";
+import { SKUDetail } from "components/Pengajuans/SKUDetail";
+import { TanahDetail } from "components/Pengajuans/TanahDetail";
+import React, { useEffect, useState } from "react";
 import {
+    Redirect,
     useHistory,
     useParams,
 } from "react-router-dom/cjs/react-router-dom.min";
@@ -31,9 +57,90 @@ function PengajuanForm() {
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [pengajuans, setPengajuan] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isOpenReject, setOpenReject] = useState(false);
+    const initialRef = React.useRef();
 
     let { id } = useParams();
     const isEdit = id;
+
+    const link = () => {
+        switch (pengajuans.code) {
+            case "SKBPN":
+                return "belum_menikahs";
+            case "SKBBK":
+                return "berpergians";
+            case "SKD":
+                return "domisilis";
+            case "SKJD":
+                return "jandas";
+            case "SKKM":
+                return "kematians";
+            case "SPCK":
+                return "kepolisians";
+            case "SKPOT":
+                return "penghasilans";
+            case "SKPN":
+                return "pernah_menikahs";
+            case "SKPD":
+                return "pindahs";
+            case "SKPK":
+                return "pindahs";
+            case "SKTM":
+                return "sktms";
+            case "SKKH":
+                return "kelahirans";
+            case "SIK":
+                return "keramaians";
+            case "SKU":
+                return "skus";
+            case "SKTMR":
+                return "rumahs";
+            case "SPORADIK":
+                return "tanahs";
+            case "SKKT":
+                return "tanahs";
+        }
+    };
+
+    const Detail = () => {
+        switch (pengajuans.code) {
+            case "SKBM":
+                return <BelumMenikahDetail pengajuans={pengajuans.ref_id} />;
+            case "SKBBK":
+                return <BerpergianDetail pengajuans={pengajuans.ref_id} />;
+            case "SKD":
+                return <DomisiliDetail pengajuans={pengajuans.ref_id} />;
+            case "SKJD":
+                return <JandaDetail pengajuans={pengajuans.ref_id} />;
+            case "SKKM":
+                return <KematianDetail pengajuans={pengajuans.ref_id} />;
+            case "SKCK":
+                return <KepolisianDetail pengajuans={pengajuans.ref_id} />;
+            case "SKPOT":
+                return <PenghasilanDetail pengajuans={pengajuans.ref_id} />;
+            case "SKPN":
+                return <PernahNikahDetail pengajuans={pengajuans.ref_id} />;
+            case "SKPD":
+                return <PindahDetail pengajuans={pengajuans.ref_id} />;
+            case "SKPK":
+                return <PindahDetail pengajuans={pengajuans.ref_id} />;
+            case "SKKH":
+                return <KelahiranDetail pengajuans={pengajuans.ref_id} />;
+            case "SPORADIK":
+                return <TanahDetail pengajuans={pengajuans.ref_id} />;
+            case "SKKT":
+                return <TanahDetail pengajuans={pengajuans.ref_id} />;
+            case "SKU":
+                return <SKUDetail pengajuans={pengajuans.ref_id} />;
+            case "SKTMR":
+                return <RumahDetail pengajuans={pengajuans.ref_id} />;
+            case "SIK":
+                return <KeramaianDetail pengajuans={pengajuans.ref_id} />;
+            default:
+                return <></>;
+        }
+    };
 
     function onSubmit(fields, { setStatus, setSubmitting }) {
         setStatus();
@@ -54,7 +161,7 @@ function PengajuanForm() {
                 }
             })
             .catch((error) => {
-                setSubmitting(false);
+                // setSubmitting(false);
                 console.log(error);
             });
     }
@@ -66,7 +173,11 @@ function PengajuanForm() {
             .then((response) => {
                 if (response.status == 200) {
                     console.log(response);
-                    history.goBack();
+                    if (s == "VALID") {
+                        onOpen();
+                    } else {
+                        history.goBack();
+                    }
                 }
             })
             .catch((error) => {
@@ -232,51 +343,62 @@ function PengajuanForm() {
                                             </Tr>
                                         </Tbody>
                                     </Table>
+                                    <Text
+                                        fontSize="l"
+                                        fontWeight="bold"
+                                        flex="1"
+                                        mt="16px"
+                                    >
+                                        Detail Pengajuan
+                                    </Text>
+                                    <Detail />
                                 </Flex>
-                                <Center>
-                                    <Button
-                                        fontSize="10px"
-                                        fontWeight="bold"
-                                        w="100px"
-                                        h="45"
-                                        mb="24px"
-                                        onClick={() => {
-                                            updatePengajuan(
-                                                pengajuans,
-                                                "REJECTED"
-                                            );
-                                        }}
-                                        me="16px"
-                                        variant="outline"
-                                        colorScheme="teal"
-                                    >
-                                        TOLAK
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        bg="teal.300"
-                                        fontSize="10px"
-                                        color="white"
-                                        fontWeight="bold"
-                                        w="100px"
-                                        h="45"
-                                        onClick={() => {
-                                            updatePengajuan(
-                                                pengajuans,
-                                                "VALID"
-                                            );
-                                        }}
-                                        mb="24px"
-                                        _hover={{
-                                            bg: "teal.200",
-                                        }}
-                                        _active={{
-                                            bg: "teal.400",
-                                        }}
-                                    >
-                                        SETUJUI
-                                    </Button>
-                                </Center>
+                                {pengajuans.status != "VALID" &&
+                                pengajuans.status != "REJECTED" ? (
+                                    <Center>
+                                        <Button
+                                            fontSize="10px"
+                                            fontWeight="bold"
+                                            w="100px"
+                                            h="45"
+                                            mb="24px"
+                                            onClick={() => {
+                                                setOpenReject(true);
+                                            }}
+                                            me="16px"
+                                            variant="outline"
+                                            colorScheme="teal"
+                                        >
+                                            TOLAK
+                                        </Button>
+                                        <Button
+                                            type="submit"
+                                            bg="teal.300"
+                                            fontSize="10px"
+                                            color="white"
+                                            fontWeight="bold"
+                                            w="100px"
+                                            h="45"
+                                            onClick={() => {
+                                                updatePengajuan(
+                                                    pengajuans,
+                                                    "VALID"
+                                                );
+                                            }}
+                                            mb="24px"
+                                            _hover={{
+                                                bg: "teal.200",
+                                            }}
+                                            _active={{
+                                                bg: "teal.400",
+                                            }}
+                                        >
+                                            SETUJUI
+                                        </Button>
+                                    </Center>
+                                ) : (
+                                    <></>
+                                )}
                             </TabPanel>
 
                             <TabPanel>
@@ -291,7 +413,7 @@ function PengajuanForm() {
                                         {pengajuans.detail.map((data) => (
                                             <Tr>
                                                 <Td>{data.created_at}</Td>
-                                                <Td>{data.status}</Td>
+                                                <Td>{data.note}</Td>
                                             </Tr>
                                         ))}
                                     </Tbody>
@@ -301,6 +423,82 @@ function PengajuanForm() {
                     </Tabs>
                 )}
             </Card>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Berhasil Update Pengajuan</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>Lanjut Print Pengajuan?</ModalBody>
+                    <ModalFooter>
+                        <Button
+                            mr={3}
+                            variant="ghost"
+                            onClick={() => {
+                                onClose();
+                                history.goBack();
+                            }}
+                        >
+                            Tidak
+                        </Button>
+                        <Button
+                            colorScheme="blue"
+                            onClick={() => {
+                                onClose();
+                                history.push(
+                                    "/surat/" + link() + "/" + pengajuans.ref_id
+                                );
+                            }}
+                        >
+                            Lanjut
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal
+                isOpen={isOpenReject}
+                onClose={() => {
+                    setOpenReject(false);
+                }}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Tolak Pengajuan</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormControl>
+                            <FormLabel>Alasan Tolak</FormLabel>
+                            <Input
+                                ref={initialRef}
+                                placeholder="Masukkan Alasan"
+                            />
+                        </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            colorScheme="blue"
+                            mr={3}
+                            onClick={() => {
+                                setOpenReject(false);
+                            }}
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            onClick={() => {
+                                const fields = {
+                                    ...pengajuans,
+                                    note: initialRef.current.value,
+                                };
+                                updatePengajuan(fields, "REJECTED");
+                                setOpenReject(false);
+                            }}
+                        >
+                            Submit
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Flex>
     );
 }

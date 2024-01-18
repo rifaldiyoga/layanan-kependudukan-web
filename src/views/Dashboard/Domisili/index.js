@@ -61,6 +61,11 @@ function Domisilis() {
             Header: "NIK",
             accessor: "nik",
         },
+
+        {
+            Header: "Nama",
+            accessor: "penduduk.fullname",
+        },
         {
             Header: "Jenis",
             accessor: "type",

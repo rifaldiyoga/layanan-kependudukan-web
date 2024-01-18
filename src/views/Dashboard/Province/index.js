@@ -69,6 +69,7 @@ function Provinces() {
                 loading={loading}
                 path="/provinces"
                 onDelete={deleteProvince}
+                isAdd={true}
             />
         </Flex>
     );

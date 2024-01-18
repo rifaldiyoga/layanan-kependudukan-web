@@ -32,6 +32,7 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import BillingInformation from "views/Dashboard/Billing/components/BillingInformation";
 import Transactions from "views/Dashboard/Billing/components/Transactions";
+import SearchSelect from "components/Select/SearchSelect";
 
 function RWForm() {
     const history = useHistory();
@@ -46,6 +47,7 @@ function RWForm() {
         axiosClient
             .get("/v1/kelurahans")
             .then(({ data }) => {
+                console.log(data.data.data);
                 setLoading(false);
                 setKelurahans(data.data.data);
             })
@@ -164,7 +166,11 @@ function RWForm() {
                                     const rws = data.data;
 
                                     setLoading(false);
-                                    const fields = ["code", "name"];
+                                    const fields = [
+                                        "code",
+                                        "name",
+                                        "kelurahan_id",
+                                    ];
                                     fields.forEach((field) => {
                                         setFieldValue(field, rws[field], false);
                                     });
@@ -240,8 +246,17 @@ function RWForm() {
                                                 Kelurahan
                                             </FormLabel>
                                             <Field
+                                                placeholder="Kelurahan"
                                                 name="kelurahan_id"
-                                                component={Selects}
+                                                options={kelurahans.map(
+                                                    (data) => {
+                                                        return {
+                                                            value: data.id,
+                                                            label: data.name,
+                                                        };
+                                                    }
+                                                )}
+                                                component={SearchSelect}
                                             />
 
                                             <FormErrorMessage>

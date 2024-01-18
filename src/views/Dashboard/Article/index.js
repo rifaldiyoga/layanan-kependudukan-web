@@ -63,12 +63,13 @@ function Articles() {
     return (
         <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
             <ListView
-                title={"Daftar Pendidikan"}
+                title={"Daftar Artikel Berita"}
                 captions={columnsData1}
                 data={articles}
                 loading={loading}
                 path="/articles"
                 onDelete={deleteArticle}
+                isAdd={true}
             />
         </Flex>
     );

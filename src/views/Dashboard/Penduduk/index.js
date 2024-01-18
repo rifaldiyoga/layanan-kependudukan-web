@@ -58,8 +58,8 @@ function Penduduks() {
             accessor: "jk",
         },
         {
-            Header: "Kewarganegaraan",
-            accessor: "nationality",
+            Header: "Status",
+            accessor: "status_family",
         },
         {
             Header: "Tgl Dibuat",
@@ -80,6 +80,7 @@ function Penduduks() {
                 loading={loading}
                 path="/penduduks"
                 onDelete={deletePenduduk}
+                isAdd={true}
             />
         </Flex>
     );

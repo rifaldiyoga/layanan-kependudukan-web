@@ -69,6 +69,7 @@ function Religions() {
                 loading={loading}
                 path="/religions"
                 onDelete={deleteReligion}
+                isAdd={true}
             />
         </Flex>
     );
